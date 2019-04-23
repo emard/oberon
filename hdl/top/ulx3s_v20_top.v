@@ -1,6 +1,7 @@
 module ulx3s_v20(
 //      -- System clock and reset
 	input clk_25mhz, // main clock input from external clock source
+	output wifi_en, wifi_gpio0,
 
 //      -- On-board user buttons and status LEDs
 	input [6:0] btn,
@@ -37,11 +38,14 @@ module ulx3s_v20(
         // output usb_fpga_pu_dp, usb_fpga_pu_dn,
         inout usb_fpga_dp, usb_fpga_dn // enable internal pullups at constraints file
     );
+	assign wifi_gpio0 = btn[0];
+	assign wifi_en = 1'b0;
 	
-	assign sdram_cke = 1'b1; 	// -- DRAM clock enable
+	assign sdram_cke = 1'b1; // -- SDRAM clock enable
+	assign sd_d[3:1] = 3'bzzz; // set as inputs with pullups enabled at constraints file
+
 	//assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3vcc through 1.5K resistor
 	//assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3vcc through 1.5K resistor
-	assign sd_d[3] = 1'bz; // set as input
 	
 	wire [3:0] tmds;
         
@@ -66,7 +70,7 @@ module ulx3s_v20(
 		//.VGA_R(vga_red),
 		//.VGA_G(vga_green),
 		//.VGA_B(vga_blue),
-		.TMDS(tmds), // {LVDS_ck, LVDS_Red, LVDS_Green, LVDS_Blue}
+		.TMDS(gpdi_dp), // {LVDS_ck, LVDS_Red, LVDS_Green, LVDS_Blue}
 
 		.PS2CLKA(usb_fpga_dp), // keyboard clock
 		.PS2DATA(usb_fpga_dn), // keyboard data
@@ -86,9 +90,5 @@ module ulx3s_v20(
 		.SDRAM_DQML(sdram_dqm[0]),
 		.SDRAM_DQMH(sdram_dqm[1])
 	);
-
-    // fake differential
-    assign gpdi_dp = tmds;
-    //assign gpdi_dn = ~tmds;
 
 endmodule

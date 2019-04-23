@@ -66,12 +66,11 @@ VERILOG_FILES = \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
   ../../../../hdl/hdmi_ioip.v \
-
-#  ../../../../hdl/ioip/ioip.v \
-#  ../../../../hdl/dcm/dcm.v \
-#  ../../../../hdl/dcm1/dcm1.v \
-#  ../../../../hdl/cache/cache.v \
-#  ../../../../hdl/vqueue/vqueue.v
+  ../../../../hdl/ioip/ioip.v \
+  ../../../../hdl/dcm/dcm.v \
+  ../../../../hdl/dcm1/dcm1.v \
+  ../../../../hdl/cache/cache.v \
+  ../../../../hdl/vqueue/vqueue.v
 
 # lattice diamond vendor-specific
 SBX_FILES = \
