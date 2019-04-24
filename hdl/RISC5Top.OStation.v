@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps  
-
 /*Project Oberon, Revised Edition 2013
 
 Book copyright (C)2013 Niklaus Wirth and Juerg Gutknecht;
@@ -25,8 +23,8 @@ CONNECTION WITH THE DEALINGS IN OR USE OR PERFORMANCE OF THE SOFTWARE.*/
 // Modified for SDRAM - Nicolae Dumitrache 2016: +cache (16KB, 4-way 8-set), +SDRAM interface (100Mhz)
 
 module RISC5Top(
-	input CLK_25MHZ,
-	input CLK_PIXEL, CLK_SHIFT,
+	input CLK_CPU, CLK_SDRAM,
+	input CLK_PIXEL,
 	input BTN_EAST,
 	input BTN_NORTH,
 	input BTN_WEST,
@@ -38,7 +36,6 @@ module RISC5Top(
 	output SD_DI,
 	output SD_CK,
 	output SD_nCS,
-	output [3:0]TMDS,
 	// VGA video
 	output VGA_HSYNC, VGA_VSYNC, VGA_BLANK,
 	output [1:0] VGA_R, VGA_G, VGA_B,
@@ -46,7 +43,6 @@ module RISC5Top(
 	inout PS2CLKB, PS2DATB,
 	inout [7:0]gpio,
 
-	output SDRAM_CLK,
 	output SDRAM_nCAS,
 	output SDRAM_nRAS,
 	output SDRAM_nCS,
@@ -71,8 +67,8 @@ module RISC5Top(
 // 9  general-purpose I/O tri-state control
  
 reg rst;
-wire clk;
-wire clk65, dummy1, clk325;
+wire clk, clk_sdr;
+wire clk65;
 wire vga_hsync, vga_vsync;
 
 wire [3:0]btn = {BTN_EAST, BTN_NORTH, BTN_WEST, BTN_SOUTH};
@@ -100,7 +96,6 @@ assign VGA_HSYNC = vga_hsync;
 assign VGA_VSYNC = vga_vsync;
 assign VGA_BLANK = ~de;
 assign clk65 = CLK_PIXEL;
-assign clk325 = CLK_SHIFT;
 
 wire[23:0] adr;
 wire [3:0] iowadr; // word address
@@ -210,7 +205,6 @@ always @(posedge clk) begin
 end
 
 
-	wire clk_sdr;
 	reg [1:0]cntrl0_user_command_register;
 	wire [15:0]cntrl0_user_input_data;
 	wire [15:0]sys_DOUT;
@@ -219,14 +213,9 @@ end
 	wire [1:0]sys_cmd_ack;
 	reg crw = 1'b0;
 	wire [12:0]waddr;
-	dcm dcm_inst
-	(
-		.CLKI(CLK_25MHZ),
-		.CLKOP(dummy1), // 75Mhz
-		.CLKOS(clk), // SoC clock (25MHz)
-		.CLKOS2(clk_sdr), // 100MHz
-		.CLKOS3(SDRAM_CLK) // 100MHz, 270 phase
-	);
+
+	assign clk = CLK_CPU;
+	assign clk_sdr = CLK_SDRAM;
 	
 	
 	reg [17:0]sys_addr;
@@ -265,7 +254,7 @@ end
 		 .addr({1'b0, adr[19:0]}), 
 		 .dout(inbus0), 
 		 .din(outbus), 
-		 .clk(clk), 
+		 .clk(clk),
 		 .mreq(mreq), 
 		 .wmask(({4{!ben}} | (1'b1 << adr[1:0])) & {4{wr}}),
 		 .ce(CE), 

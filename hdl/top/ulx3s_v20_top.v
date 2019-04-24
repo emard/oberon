@@ -42,35 +42,48 @@ module ulx3s_v20(
 	assign wifi_en = 1'b0;
 
 	assign sdram_cke = 1'b1; // -- SDRAM clock enable
-	assign sd_d[3:1] = 3'bz11; // set as inputs with pullups enabled at constraints file
+	assign sd_d[3:1] = 3'bzzz; // set as inputs with pullups enabled at constraints file
 
 	//assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3vcc through 1.5K resistor
 	//assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3vcc through 1.5K resistor
 	
-	wire [2:0] clocks;
+	wire [2:0] clocks_video;
 	clk_25_325_65_25
 	clk_25_325_65_25_inst
 	(
 	  .clkin(clk_25mhz),
-	  .clkout(clocks)
+	  .clkout(clocks_video)
 	);
-
         wire clk_pixel, clk_shift;
+        assign clk_pixel = clocks_video[1]; //  65 MHz
+        assign clk_shift = clocks_video[0]; // 325 MHz
+
+	wire [2:0] clocks_system;
+	wire pll_locked;
+	clk_25_100_100p_25
+	clk_25_100_100p_25_inst
+	(
+	  .clkin(clk_25mhz),
+	  .clkout(clocks_system),
+	  .locked(pll_locked)
+	);
+	wire clk_cpu, clk_sdram;
+	assign clk_sdram = clocks_system[0]; // 100 MHz sdram controller
+	assign sdram_clk = clocks_system[1]; // 100 MHz 225 deg SDRAM chip
+	assign clk_cpu = clocks_system[2]; // 25 MHz
+
         wire vga_hsync, vga_vsync, vga_blank;
         wire [1:0] vga_r, vga_g, vga_b;
 
-        assign clk_pixel = clocks[1]; //  65 MHz
-        assign clk_shift = clocks[0]; // 325 MHz
-
 	RISC5Top sys_inst
 	(
-		.CLK_25MHZ(clk_25mhz),
+		.CLK_CPU(clk_cpu),
+		.CLK_SDRAM(clk_sdram),
                 .CLK_PIXEL(clk_pixel),
-                .CLK_SHIFT(clk_shift),
-		.BTN_EAST(!btn[6]),
-		.BTN_NORTH(btn[3]),
-		.BTN_WEST(btn[5]),
-		.BTN_SOUTH(btn[4]),
+		.BTN_NORTH(btn[3]), // up
+		.BTN_SOUTH(btn[4]), // down
+		.BTN_WEST(btn[5]), // left
+		.BTN_EAST(btn[0]), // right (power btn, inverted signal)
 		.RX(ftdi_txd),   // RS-232
 		.TX(ftdi_rxd),
 		.LED(led),
@@ -94,7 +107,6 @@ module ulx3s_v20(
 
 		.gpio(gp[9:2]),
 
-		.SDRAM_CLK(sdram_clk),
 		.SDRAM_nCAS(sdram_casn),
 		.SDRAM_nRAS(sdram_rasn),
 		.SDRAM_nCS(sdram_csn),

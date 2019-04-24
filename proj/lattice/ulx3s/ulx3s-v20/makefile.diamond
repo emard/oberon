@@ -43,9 +43,20 @@ CLK0_OPTIONS = \
   --clkout1=65 \
   --clkout2=25
 
+CLK1_NAME = clk_25_100_100p_25
+CLK1_FILE_NAME = clocks/$(CLK1_NAME).v
+CLK1_OPTIONS = \
+  --module=$(CLK1_NAME) \
+  --clkin=25 \
+  --clkout0=100 \
+  --clkout1=100 \
+  --phase1=225 \
+  --clkout2=25
+
 VERILOG_FILES = \
   $(TOP_MODULE_FILE) \
   clocks/$(CLK0_NAME).v \
+  clocks/$(CLK1_NAME).v \
   ../../../../hdl/RISC5Top.OStation.v \
   ../../../../hdl/RISC5.v \
   ../../../../hdl/PROM.v \
@@ -62,27 +73,21 @@ VERILOG_FILES = \
   ../../../../hdl/FPDivider.v \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
-  ../../../../hdl/dcm/dcm.v \
   ../../../../hdl/cache/cache.v \
   ../../../../hdl/vqueue/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
 
-#  ../../../../hdl/hdmi_ioip.v \
-#  ../../../../hdl/ioip/ioip.v \
-#  ../../../../hdl/ioip/ioip.sbx \
-#  ../../../../hdl/dcm1/dcm1.sbx \
-
-# lattice diamond vendor-specific
-SBX_FILES = \
-  ../../../../hdl/dcm/dcm.sbx \
-  ../../../../hdl/cache/cache.sbx \
-  ../../../../hdl/vqueue/vqueue.sbx \
-  
 VHDL_FILES = \
   ../../../../hdl/dvi/vga.vhd \
   ../../../../hdl/dvi/vga2dvid.vhd \
   ../../../../hdl/dvi/tmds_encoder.vhd \
 
+# lattice diamond vendor-specific
+SBX_FILES = \
+  ../../../../hdl/cache/cache.sbx \
+  ../../../../hdl/vqueue/vqueue.sbx \
+  
+STRATEGY = ../../../../strategy/Oberon_SDRAM1.sty
 
 SCRIPTS = ../../../../scripts
 include $(SCRIPTS)/trellis_path.mk
