@@ -26,7 +26,7 @@ CONNECTION WITH THE DEALINGS IN OR USE OR PERFORMANCE OF THE SOFTWARE.*/
 
 module RISC5Top(
 	input CLK_25MHZ,
-	input VGA_CLK_PIXEL, VGA_CLK_SHIFT,
+	input CLK_PIXEL, CLK_SHIFT,
 	input BTN_EAST,
 	input BTN_NORTH,
 	input BTN_WEST,
@@ -99,8 +99,8 @@ assign VGA_B = RGB[1:0];
 assign VGA_HSYNC = vga_hsync;
 assign VGA_VSYNC = vga_vsync;
 assign VGA_BLANK = ~de;
-assign clk65 = VGA_CLK_PIXEL;
-assign clk325 = VGA_CLK_SHIFT;
+assign clk65 = CLK_PIXEL;
+assign clk325 = CLK_SHIFT;
 
 wire[23:0] adr;
 wire [3:0] iowadr; // word address
@@ -227,28 +227,6 @@ end
 		.CLKOS2(clk_sdr), // 100MHz
 		.CLKOS3(SDRAM_CLK) // 100MHz, 270 phase
 	);
-	
-	/*
-	dcm1 dcm_inst1
-	(
-		.CLKI(CLK_25MHZ),
-		.CLKOP(clk65), // 65MHz
-		.CLKOS(clk325) // 325MHz
-	);
-	*/
-	
-	HDMI_OUT HDMI_OUT_inst
-	(
-		.clk(clk65), 
-		.clk5x(clk325), 
-		.R({RGB[5:4], 6'b000000}), 
-		.G({RGB[3:2], 6'b000000}), 
-		.B({RGB[1:0], 6'b000000}), 
-		.hsync(vga_hsync), 
-		.vsync(vga_vsync), 
-		.de(de), 
-		.TMDS(TMDS)
-	 );	
 	
 	
 	reg [17:0]sys_addr;

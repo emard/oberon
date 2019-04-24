@@ -55,18 +55,18 @@ module ulx3s_v20(
 	  .clkout(clocks)
 	);
 
-        wire vga_clk_pixel, vga_clk_shift;
+        wire clk_pixel, clk_shift;
         wire vga_hsync, vga_vsync, vga_blank;
         wire [1:0] vga_r, vga_g, vga_b;
 
-        assign vga_clk_pixel = clocks[1];
-        assign vga_clk_shift = clocks[0];
+        assign clk_pixel = clocks[1]; //  65 MHz
+        assign clk_shift = clocks[0]; // 325 MHz
 
 	RISC5Top sys_inst
 	(
 		.CLK_25MHZ(clk_25mhz),
-                .VGA_CLK_PIXEL(vga_clk_pixel),
-                .VGA_CLK_SHIFT(vga_clk_shift),
+                .CLK_PIXEL(clk_pixel),
+                .CLK_SHIFT(clk_shift),
 		.BTN_EAST(!btn[6]),
 		.BTN_NORTH(btn[3]),
 		.BTN_WEST(btn[5]),
@@ -124,7 +124,7 @@ module ulx3s_v20(
     )
     vga_instance
     (
-      .clk_pixel(vga_clk_pixel),
+      .clk_pixel(clk_pixel),
       .test_picture(1'b1), // enable test picture generation
       .vga_r(vga_r),
       .vga_g(vga_g),
@@ -147,8 +147,8 @@ module ulx3s_v20(
     )
     vga2dvid_instance
     (
-      .clk_pixel(vga_clk_pixel),
-      .clk_shift(vga_clk_shift),
+      .clk_pixel(clk_pixel),
+      .clk_shift(clk_shift),
       .in_red(vga_r),
       .in_green(vga_g),
       .in_blue(vga_b),
@@ -168,7 +168,7 @@ module ulx3s_v20(
     )
     fake_differential_instance
     (
-      .clk_shift(vga_clk_shift),
+      .clk_shift(clk_shift),
       .in_clock(tmds[3]),
       .in_red(tmds[2]),
       .in_green(tmds[1]),
