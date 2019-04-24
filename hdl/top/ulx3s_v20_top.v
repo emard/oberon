@@ -15,23 +15,23 @@ module ulx3s_v20(
 	input ftdi_txd,
 	 
 //	-- SDRAM interface (For use with 16Mx16bit or 32Mx16bit SDR DRAM, depending on version)
+	output sdram_csn, 
 	output sdram_clk,	// clock to SDRAM
 	output sdram_cke,	// clock enable to SDRAM	
 	output sdram_rasn,      // SDRAM RAS
 	output sdram_casn,	// SDRAM CAS
 	output sdram_wen,	// SDRAM write-enable
-	output [1:0]sdram_ba,	// SDRAM bank-address
-	output [12:0]sdram_a,	// SDRAM address bus
-	inout [15:0]sdram_d,	// data bus to/from SDRAM	
-	output sdram_csn, 
+	output [12:0] sdram_a,	// SDRAM address bus
+	output [1:0] sdram_ba,	// SDRAM bank-address
 	output [1:0] sdram_dqm,
+	inout [15:0] sdram_d,	// data bus to/from SDRAM	
 	  
 //	-- DVI interface
-	// output [3:0] gpdi_dp, gpdi_dn,
-	output [3:0] gpdi_dp,
+	output [3:0] gpdi_dp, gpdi_dn,
+	// output [3:0] gpdi_dp,
 	 
 //	-- SD/MMC Interface (Support either SPI or nibble-mode)
-        output sd_clk, sd_cmd,
+        inout sd_clk, sd_cmd,
         inout [3:0] sd_d,
 
 //	-- PS2 interface (Both ports accessible via Y-splitter cable)
@@ -40,18 +40,33 @@ module ulx3s_v20(
     );
 	assign wifi_gpio0 = btn[0];
 	assign wifi_en = 1'b0;
-	
+
 	assign sdram_cke = 1'b1; // -- SDRAM clock enable
-	assign sd_d[3:1] = 3'bzzz; // set as inputs with pullups enabled at constraints file
+	assign sd_d[3:1] = 3'bz11; // set as inputs with pullups enabled at constraints file
 
 	//assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3vcc through 1.5K resistor
 	//assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3vcc through 1.5K resistor
 	
-	wire [3:0] tmds;
-        
+	wire [2:0] clocks;
+	clk_25_325_65_25
+	clk_25_325_65_25_inst
+	(
+	  .clkin(clk_25mhz),
+	  .clkout(clocks)
+	);
+
+        wire vga_clk_pixel, vga_clk_shift;
+        wire vga_hsync, vga_vsync, vga_blank;
+        wire [1:0] vga_r, vga_g, vga_b;
+
+        assign vga_clk_pixel = clocks[1];
+        assign vga_clk_shift = clocks[0];
+
 	RISC5Top sys_inst
 	(
 		.CLK_25MHZ(clk_25mhz),
+                .VGA_CLK_PIXEL(vga_clk_pixel),
+                .VGA_CLK_SHIFT(vga_clk_shift),
 		.BTN_EAST(!btn[6]),
 		.BTN_NORTH(btn[3]),
 		.BTN_WEST(btn[5]),
@@ -65,12 +80,12 @@ module ulx3s_v20(
 		.SD_CK(sd_clk),
 		.SD_nCS(sd_d[3]),
 
-		//.VGA_HSYNC(vga_hs),
-		//.VGA_VSYNC(vga_vs), // video controller
-		//.VGA_R(vga_red),
-		//.VGA_G(vga_green),
-		//.VGA_B(vga_blue),
-		.TMDS(gpdi_dp), // {LVDS_ck, LVDS_Red, LVDS_Green, LVDS_Blue}
+		.VGA_HSYNC(vga_hsync),
+		.VGA_VSYNC(vga_vsync),
+		.VGA_BLANK(vga_blank),
+		.VGA_R(vga_r),
+		.VGA_G(vga_g),
+		.VGA_B(vga_b),
 
 		.PS2CLKA(usb_fpga_dp), // keyboard clock
 		.PS2DATA(usb_fpga_dn), // keyboard data
@@ -90,5 +105,76 @@ module ulx3s_v20(
 		.SDRAM_DQML(sdram_dqm[0]),
 		.SDRAM_DQMH(sdram_dqm[1])
 	);
+
+
+/*
+    wire [7:0] vga_r8, vga_g8, vga_b8;
+    vga
+    #(
+      .C_resolution_x(1024),
+      .C_hsync_front_porch(16),
+      .C_hsync_pulse(96),
+      .C_hsync_back_porch(44),
+      .C_resolution_y(768),
+      .C_vsync_front_porch(10),
+      .C_vsync_pulse(2),
+      .C_vsync_back_porch(31),
+      .C_bits_x(11),
+      .C_bits_y(11)
+    )
+    vga_instance
+    (
+      .clk_pixel(vga_clk_pixel),
+      .test_picture(1'b1), // enable test picture generation
+      .vga_r(vga_r),
+      .vga_g(vga_g),
+      .vga_b(vga_b),
+      .vga_hsync(vga_hsync),
+      .vga_vsync(vga_vsync),
+      .vga_blank(vga_blank)
+    );
+    assign vga_r = vga_r8[7:6];
+    assign vga_g = vga_g8[7:6];
+    assign vga_b = vga_b8[7:6];
+*/
+
+    // VGA to digital video converter
+    wire [1:0] tmds[3:0];
+    vga2dvid
+    #(
+      .C_ddr(1'b1),
+      .C_depth(2)
+    )
+    vga2dvid_instance
+    (
+      .clk_pixel(vga_clk_pixel),
+      .clk_shift(vga_clk_shift),
+      .in_red(vga_r),
+      .in_green(vga_g),
+      .in_blue(vga_b),
+      .in_hsync(vga_hsync),
+      .in_vsync(vga_vsync),
+      .in_blank(vga_blank),
+      .out_clock(tmds[3]),
+      .out_red(tmds[2]),
+      .out_green(tmds[1]),
+      .out_blue(tmds[0])
+    );
+
+    // output TMDS SDR/DDR data to fake differential lanes
+    fake_differential
+    #(
+      .C_ddr(1'b1)
+    )
+    fake_differential_instance
+    (
+      .clk_shift(vga_clk_shift),
+      .in_clock(tmds[3]),
+      .in_red(tmds[2]),
+      .in_green(tmds[1]),
+      .in_blue(tmds[0]),
+      .out_p(gpdi_dp),
+      .out_n(gpdi_dn)
+    );
 
 endmodule

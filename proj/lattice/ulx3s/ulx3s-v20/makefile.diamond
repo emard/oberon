@@ -22,35 +22,32 @@ OPENOCD_INTERFACE=$(SCRIPTS)/ft231x.ocd
 #OPENOCD_INTERFACE=$(SCRIPTS)/ft2232.ocd
 
 # ******* design files *******
-CONSTRAINTS = ../../../../constraints/ulx3s_v20.lpf
+CONSTRAINTS = ../../../../constraints/ulx3s_v20_segpdi.lpf
 TOP_MODULE = ulx3s_v20
 TOP_MODULE_FILE = ../../../../hdl/top/$(TOP_MODULE)_top.v
 
-CLK0_NAME = clk_25_250_125_25
+CLK0_NAME = clk_25_325_65_25
 CLK0_FILE_NAME = clocks/$(CLK0_NAME).v
 CLK0_OPTIONS_OLD = \
   --input=25 \
-  --output=250 \
-  --s1=125 \
+  --output=325 \
+  --s1=65 \
   --p1=0 \
   --s2=25 \
   --p2=0
 # for new ecppll: to override above, rename CLK0_OPTIONS_NEW -> CLK0_OPTIONS
 CLK0_OPTIONS = \
   --module=$(CLK0_NAME) \
-  --clkin_name=clki \
   --clkin=25 \
-  --clkout0_name=clko \
-  --clkout0=250 \
-  --clkout1_name=clks1 \
-  --clkout1=125 \
-  --clkout2_name=clks2 \
+  --clkout0=325 \
+  --clkout1=65 \
   --clkout2=25
 
 VERILOG_FILES = \
   $(TOP_MODULE_FILE) \
-  ../../../../hdl/RISC5.v \
+  clocks/$(CLK0_NAME).v \
   ../../../../hdl/RISC5Top.OStation.v \
+  ../../../../hdl/RISC5.v \
   ../../../../hdl/PROM.v \
   ../../../../hdl/cache_controller.v \
   ../../../../hdl/sdram.v \
@@ -70,7 +67,8 @@ VERILOG_FILES = \
   ../../../../hdl/dcm/dcm.v \
   ../../../../hdl/dcm1/dcm1.v \
   ../../../../hdl/cache/cache.v \
-  ../../../../hdl/vqueue/vqueue.v
+  ../../../../hdl/vqueue/vqueue.v \
+  ../../../../hdl/dvi/fake_differential.v \
 
 # lattice diamond vendor-specific
 SBX_FILES = \
@@ -78,12 +76,13 @@ SBX_FILES = \
   ../../../../hdl/dcm/dcm.sbx \
   ../../../../hdl/dcm1/dcm1.sbx \
   ../../../../hdl/cache/cache.sbx \
-  ../../../../hdl/vqueue/vqueue.sbx
+  ../../../../hdl/vqueue/vqueue.sbx \
   
-VHDL_FILES =
-#  hdl/vga.vhd \
-#  hdl/vga2dvid.vhd \
-#  hdl/tmds_encoder.vhd
+VHDL_FILES = \
+  ../../../../hdl/dvi/vga.vhd \
+  ../../../../hdl/dvi/vga2dvid.vhd \
+  ../../../../hdl/dvi/tmds_encoder.vhd \
+
 
 SCRIPTS = ../../../../scripts
 include $(SCRIPTS)/trellis_path.mk

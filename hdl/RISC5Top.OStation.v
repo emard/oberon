@@ -26,6 +26,7 @@ CONNECTION WITH THE DEALINGS IN OR USE OR PERFORMANCE OF THE SOFTWARE.*/
 
 module RISC5Top(
 	input CLK_25MHZ,
+	input VGA_CLK_PIXEL, VGA_CLK_SHIFT,
 	input BTN_EAST,
 	input BTN_NORTH,
 	input BTN_WEST,
@@ -37,12 +38,10 @@ module RISC5Top(
 	output SD_DI,
 	output SD_CK,
 	output SD_nCS,
-	output CLK_SHIFT, // 325 MHz x5 pixel shift clock
 	output [3:0]TMDS,
-	//output VGA_HSYNC, VGA_VSYNC, // video controller
-	//output [3:0]VGA_R,
-	//output [3:0]VGA_G,
-	//output [3:0]VGA_B,
+	// VGA video
+	output VGA_HSYNC, VGA_VSYNC, VGA_BLANK,
+	output [1:0] VGA_R, VGA_G, VGA_B,
 	input PS2CLKA, PS2DATA, // keyboard
 	inout PS2CLKB, PS2DATB,
 	inout [7:0]gpio,
@@ -72,9 +71,9 @@ module RISC5Top(
 // 9  general-purpose I/O tri-state control
  
 reg rst;
-wire clk, pclk;
+wire clk;
 wire clk65, dummy1, clk325;
-wire  VGA_HSYNC, VGA_VSYNC;
+wire vga_hsync, vga_vsync;
 
 wire [3:0]btn = {BTN_EAST, BTN_NORTH, BTN_WEST, BTN_SOUTH};
 wire [7:0]swi = 8'b11111111;
@@ -93,9 +92,15 @@ reg rGo = 1'b0; // 1T delay for memory read
 assign SD_DI = MOSI[0];
 assign SD_CK = SCLK[0];
 assign SD_nCS = SS[0];
-//assign VGA_R = {RGB[5:4], 2'b00};
-//assign VGA_G = {RGB[3:2], 2'b00};
-//assign VGA_B = {RGB[1:0], 2'b00};
+
+assign VGA_R = RGB[5:4];
+assign VGA_G = RGB[3:2];
+assign VGA_B = RGB[1:0];
+assign VGA_HSYNC = vga_hsync;
+assign VGA_VSYNC = vga_vsync;
+assign VGA_BLANK = ~de;
+assign clk65 = VGA_CLK_PIXEL;
+assign clk325 = VGA_CLK_SHIFT;
 
 wire[23:0] adr;
 wire [3:0] iowadr; // word address
@@ -134,8 +139,8 @@ RS232T transmitter(.clk(clk), .rst(rst), .start(startTx), .fsel(bitrate),
 SPI spi(.clk(clk), .rst(rst), .start(spiStart), .dataTx(outbus),
    .fast(spiCtrl[2]), .dataRx(spiRx), .rdy(spiRdy),
  	.SCLK(SCLK[0]), .MOSI(MOSI[0]), .MISO(MISO[0] & MISO[1]));
-VID vid(.clk(clk), .ce(qready), .pclk(pclk), .req(dspreq), .inv(~swi[7]),
-   .viddata(inbusvid), .de(de), .RGB(RGB), .hsync(VGA_HSYNC), .vsync(VGA_VSYNC));
+VID vid(.clk(clk), .ce(qready), .pclk(clk65), .req(dspreq), .inv(~swi[7]),
+   .viddata(inbusvid), .de(de), .RGB(RGB), .hsync(vga_hsync), .vsync(vga_vsync));
 PS2 kbd(.clk(clk), .rst(rst), .done(doneKbd), .rdy(rdyKbd), .shift(),
    .data(dataKbd), .PS2C(PS2CLKA), .PS2D(PS2DATA));
 MouseM Ms(.clk(clk), .rst(rst), .msclk(PS2CLKB), .msdat(PS2DATB), .out(dataMs));
@@ -223,26 +228,27 @@ end
 		.CLKOS3(SDRAM_CLK) // 100MHz, 270 phase
 	);
 	
+	/*
 	dcm1 dcm_inst1
 	(
 		.CLKI(CLK_25MHZ),
-		.CLKOP(pclk), // 65MHz
+		.CLKOP(clk65), // 65MHz
 		.CLKOS(clk325) // 325MHz
 	);
+	*/
 	
 	HDMI_OUT HDMI_OUT_inst
 	(
-		.clk(pclk), 
+		.clk(clk65), 
 		.clk5x(clk325), 
 		.R({RGB[5:4], 6'b000000}), 
 		.G({RGB[3:2], 6'b000000}), 
 		.B({RGB[1:0], 6'b000000}), 
-		.hsync(VGA_HSYNC), 
-		.vsync(VGA_VSYNC), 
+		.hsync(vga_hsync), 
+		.vsync(vga_vsync), 
 		.de(de), 
 		.TMDS(TMDS)
 	 );	
-	assign CLK_SHIFT = clk325;
 	
 	
 	reg [17:0]sys_addr;
@@ -339,7 +345,7 @@ end
 	end
 	
 	always @(posedge clk) begin
-		auto_flush <= {auto_flush[0], VGA_VSYNC};
+		auto_flush <= {auto_flush[0], vga_vsync};
 		qready <= !empty;
 /*		if(CE)  // 1T delay for memory read
 			if(rGo) rGo <= 1'b0;
