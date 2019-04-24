@@ -83,7 +83,7 @@ module ulx3s_v20(
 		.BTN_NORTH(btn[3]), // up
 		.BTN_SOUTH(btn[4]), // down
 		.BTN_WEST(btn[5]), // left
-		.BTN_EAST(btn[0]), // right (power btn, inverted signal)
+		.BTN_EAST(~btn[0]), // right (power btn, inverted signal)
 		.RX(ftdi_txd),   // RS-232
 		.TX(ftdi_rxd),
 		.LED(led),
