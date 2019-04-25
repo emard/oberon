@@ -26,12 +26,12 @@ CONSTRAINTS = ../../../../constraints/ulx3s_v20_segpdi.lpf
 TOP_MODULE = ulx3s_v20
 TOP_MODULE_FILE = ../../../../hdl/top/$(TOP_MODULE)_top.v
 
-CLK0_NAME = clk_25_325_65_25
+CLK0_NAME = clk_25_375_75_25
 CLK0_FILE_NAME = clocks/$(CLK0_NAME).v
 CLK0_OPTIONS_OLD = \
   --input=25 \
-  --output=325 \
-  --s1=65 \
+  --output=375 \
+  --s1=75 \
   --p1=0 \
   --s2=25 \
   --p2=0
@@ -39,8 +39,8 @@ CLK0_OPTIONS_OLD = \
 CLK0_OPTIONS = \
   --module=$(CLK0_NAME) \
   --clkin=25 \
-  --clkout0=325 \
-  --clkout1=65 \
+  --clkout0=375 \
+  --clkout1=75 \
   --clkout2=25
 
 CLK1_NAME = clk_25_100_100p_25

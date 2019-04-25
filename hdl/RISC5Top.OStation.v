@@ -68,7 +68,7 @@ module RISC5Top(
  
 reg rst;
 wire clk, clk_sdr;
-wire clk65;
+wire pclk;
 wire vga_hsync, vga_vsync;
 
 wire [3:0]btn = {BTN_EAST, BTN_NORTH, BTN_WEST, BTN_SOUTH};
@@ -95,7 +95,7 @@ assign VGA_B = RGB[1:0];
 assign VGA_HSYNC = vga_hsync;
 assign VGA_VSYNC = vga_vsync;
 assign VGA_BLANK = ~de;
-assign clk65 = CLK_PIXEL;
+assign pclk = CLK_PIXEL;
 
 wire[23:0] adr;
 wire [3:0] iowadr; // word address
@@ -134,7 +134,7 @@ RS232T transmitter(.clk(clk), .rst(rst), .start(startTx), .fsel(bitrate),
 SPI spi(.clk(clk), .rst(rst), .start(spiStart), .dataTx(outbus),
    .fast(spiCtrl[2]), .dataRx(spiRx), .rdy(spiRdy),
  	.SCLK(SCLK[0]), .MOSI(MOSI[0]), .MISO(MISO[0] & MISO[1]));
-VID vid(.clk(clk), .ce(qready), .pclk(clk65), .req(dspreq), .inv(~swi[7]),
+VID vid(.clk(clk), .ce(qready), .pclk(pclk), .req(dspreq), .inv(~swi[7]),
    .viddata(inbusvid), .de(de), .RGB(RGB), .hsync(vga_hsync), .vsync(vga_vsync));
 PS2 kbd(.clk(clk), .rst(rst), .done(doneKbd), .rdy(rdyKbd), .shift(),
    .data(dataKbd), .PS2C(PS2CLKA), .PS2D(PS2DATA));

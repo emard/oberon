@@ -48,8 +48,8 @@ module ulx3s_v20(
 	//assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3vcc through 1.5K resistor
 	
 	wire [2:0] clocks_video;
-	clk_25_325_65_25
-	clk_25_325_65_25_inst
+	clk_25_375_75_25
+	clk_25_375_75_25_inst
 	(
 	  .clkin(clk_25mhz),
 	  .clkout(clocks_video)
@@ -57,6 +57,7 @@ module ulx3s_v20(
         wire clk_pixel, clk_shift;
         assign clk_pixel = clocks_video[1]; //  65 MHz
         assign clk_shift = clocks_video[0]; // 325 MHz
+        // clocks_video[2] // 25 MHz unused
 
 	wire [2:0] clocks_system;
 	wire pll_locked;
