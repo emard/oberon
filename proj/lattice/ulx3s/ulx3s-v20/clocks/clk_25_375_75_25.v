@@ -1,7 +1,7 @@
-module clk_25_325_65_25
+module clk_25_375_75_25
 (
     input clkin, // 25 MHz, 0 deg
-    output [2:0] clkout, // 0: 325 MHz, 0 deg; 1: 65 MHz, 0 deg; 2: 25 MHz, 0 deg
+    output [2:0] clkout, // 0: 375 MHz, 0 deg; 1: 75 MHz, 0 deg; 2: 25 MHz, 0 deg
     output locked
 );
 wire clkfb;
@@ -14,19 +14,19 @@ EHXPLLL #(
         .INTFB_WAKE("DISABLED"),
         .DPHASE_SOURCE("DISABLED"),
         .CLKOP_FPHASE(0),
-        .CLKOP_CPHASE(1),
+        .CLKOP_CPHASE(0),
         .OUTDIVIDER_MUXA("DIVA"),
         .CLKOP_ENABLE("ENABLED"),
         .CLKOP_DIV(2),
         .CLKOS_ENABLE("ENABLED"),
         .CLKOS_DIV(10),
-        .CLKOS_CPHASE(1),
+        .CLKOS_CPHASE(0),
         .CLKOS_FPHASE(0),
         .CLKOS2_ENABLE("ENABLED"),
-        .CLKOS2_DIV(26),
-        .CLKOS2_CPHASE(1),
+        .CLKOS2_DIV(30),
+        .CLKOS2_CPHASE(0),
         .CLKOS2_FPHASE(0),
-        .CLKFB_DIV(13),
+        .CLKFB_DIV(15),
         .CLKI_DIV(1),
         .FEEDBK_PATH("INT_OP")
     ) pll_i (
