@@ -18,10 +18,10 @@ module bram32bit
     begin
       bram_true2p_2clk
       #(
-        .dual_port(1),
+        .dual_port(1'b1),
         .data_width(8),
-        .pass_thru_a(1),
-        .pass_thru_b(1),
+        .pass_thru_a(1'b1),
+        .pass_thru_b(1'b1),
         .addr_width(addr_width)
       )
       bram_true2p_2clk_inst
