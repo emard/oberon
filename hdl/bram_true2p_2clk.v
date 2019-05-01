@@ -29,14 +29,16 @@ module bram_true2p_2clk
   begin
     // Port A
     if(clken_a)
-    if(we_a)
     begin
-      ram[addr_a] <= data_in_a;
-      data_out_a <= data_in_a;
-    end
-    else
-    begin
-      data_out_a <= ram[addr_a];
+      if(we_a)
+      begin
+        ram[addr_a] <= data_in_a;
+        data_out_a <= data_in_a;
+      end
+      else
+      begin
+        data_out_a <= ram[addr_a];
+      end
     end
   end
 
@@ -46,16 +48,17 @@ module bram_true2p_2clk
   begin
     // Port B
     if(clken_b)
-    if(we_b)
     begin
-      ram[addr_b] <= data_in_b;
-      data_out_b <= data_in_b;
-    end
-    else
-    begin
-      data_out_b <= ram[addr_b];
+      if(we_b)
+      begin
+        ram[addr_b] <= data_in_b;
+        data_out_b <= data_in_b;
+      end
+      else
+      begin
+        data_out_b <= ram[addr_b];
+      end
     end
   end
   endgenerate
-
 endmodule

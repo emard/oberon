@@ -69,10 +69,10 @@ VERILOG_FILES = \
   ../../../../hdl/FPDivider.v \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
+  ../../../../hdl/bram_true2p_2clk.v \
   ../../../../hdl/bram32bit.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
-  ../../../../hdl/bram_true2p_2clk.v \
 
 VHDL_FILES = \
   ../../../../hdl/dvi/vga.vhd \
