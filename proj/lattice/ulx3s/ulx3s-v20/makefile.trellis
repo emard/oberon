@@ -1,0 +1,85 @@
+# ******* project, board and chip name *******
+PROJECT = dvi
+BOARD = ulx3s
+# 12 25 45 85
+FPGA_SIZE = 12
+FPGA_PACKAGE = CABGA381
+
+# ******* if programming with OpenOCD *******
+# using local latest openocd until in linux distribution
+OPENOCD=openocd_ft232r
+# default onboard usb-jtag
+OPENOCD_INTERFACE=$(SCRIPTS)/ft231x.ocd
+# ulx3s-jtag-passthru
+#OPENOCD_INTERFACE=$(SCRIPTS)/ft231x2.ocd
+# ulx2s
+#OPENOCD_INTERFACE=$(SCRIPTS)/ft232r.ocd
+# external jtag
+#OPENOCD_INTERFACE=$(SCRIPTS)/ft2232.ocd
+
+# ******* design files *******
+CONSTRAINTS = ../../../../constraints/ulx3s_v20_segpdi.lpf
+TOP_MODULE = ulx3s_v20
+TOP_MODULE_FILE = ../../../../hdl/top/$(TOP_MODULE)_top.v
+
+CLK0_NAME = clk_25_375_75_25
+CLK0_FILE_NAME = clocks/$(CLK0_NAME).v
+CLK0_OPTIONS_OLD = \
+  --input=25 \
+  --output=375 \
+  --s1=75 \
+  --p1=0 \
+  --s2=25 \
+  --p2=0
+# for new ecppll: to override above, rename CLK0_OPTIONS_NEW -> CLK0_OPTIONS
+CLK0_OPTIONS = \
+  --module=$(CLK0_NAME) \
+  --clkin=25 \
+  --clkout0=375 \
+  --clkout1=75 \
+  --clkout2=25
+
+CLK1_NAME = clk_25_100_100p_25
+CLK1_FILE_NAME = clocks/$(CLK1_NAME).v
+CLK1_OPTIONS = \
+  --module=$(CLK1_NAME) \
+  --clkin=25 \
+  --clkout0=100 \
+  --clkout1=100 \
+  --phase1=225 \
+  --clkout2=25
+
+VERILOG_FILES = \
+  $(TOP_MODULE_FILE) \
+  clocks/$(CLK0_NAME).v \
+  clocks/$(CLK1_NAME).v \
+  ../../../../hdl/RISC5Top.OStation.v \
+  ../../../../hdl/RISC5.v \
+  ../../../../hdl/PROM.v \
+  ../../../../hdl/cache_controller.v \
+  ../../../../hdl/sdram.v \
+  ../../../../hdl/PS2.v \
+  ../../../../hdl/MouseM.v \
+  ../../../../hdl/RS232R.v \
+  ../../../../hdl/RS232T.v \
+  ../../../../hdl/SPI.v \
+  ../../../../hdl/Multiplier.v \
+  ../../../../hdl/Divider.v \
+  ../../../../hdl/FPAdder.v \
+  ../../../../hdl/FPDivider.v \
+  ../../../../hdl/FPMultiplier.v \
+  ../../../../hdl/VID.OStation.v \
+  ../../../../hdl/bram32bit.v \
+  ../../../../hdl/vqueue.v \
+  ../../../../hdl/dvi/fake_differential.v \
+  ../../../../hdl/bram_true2p_2clk.v \
+
+VHDL_FILES = \
+  ../../../../hdl/dvi/vga.vhd \
+  ../../../../hdl/dvi/vga2dvid.vhd \
+  ../../../../hdl/dvi/tmds_encoder.vhd \
+
+SCRIPTS = ../../../../scripts
+include $(SCRIPTS)/diamond_path.mk
+include $(SCRIPTS)/trellis_path.mk
+include $(SCRIPTS)/trellis_main.mk
