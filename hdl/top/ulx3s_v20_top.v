@@ -42,7 +42,7 @@ module ulx3s_v20(
 	assign wifi_en = 1'b0;
 
 	assign sdram_cke = 1'b1; // -- SDRAM clock enable
-	assign sd_d[3:1] = 3'bzzz; // set as inputs with pullups enabled at constraints file
+	// assign sd_d[2:1] = 2'bzz; // set as inputs with pullups enabled at constraints file
 
 	//assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3vcc through 1.5K resistor
 	//assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3vcc through 1.5K resistor

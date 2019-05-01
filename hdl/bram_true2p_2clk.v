@@ -10,7 +10,7 @@ module bram_true2p_2clk
   parameter addr_width = 6,
   parameter pass_thru_a = 0, // unused
   parameter pass_thru_b = 0, // unused
-  parameter initial_file = "initial.mem"
+  parameter initial_file = ""
 )
 (
   input [(data_width-1):0] data_in_a, data_in_b,
@@ -20,7 +20,10 @@ module bram_true2p_2clk
 );
   // Declare the RAM variable
   reg [data_width-1:0] ram[2**addr_width-1:0];
-  initial $readmemh(initial_file, ram);
+  generate
+    if(initial_file != "")
+      initial $readmemh(initial_file, ram);
+  endgenerate
 
   always @(posedge clk_a)
   begin
