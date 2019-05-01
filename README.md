@@ -13,6 +13,6 @@ unzip, and write it raw to SD card:
     dd if=RISC.img of=/dev/mmcblk0
 
 Image will initialize first 2 primary partitions (out of 4) required for
-oberon, rest of SD card (last 2 primary partitions) can be used.
-It is possible to create new primary partition(s) there and make
-new filesystem(s).
+oberon, rest of SD card (free space) can be used with
+other OS (linux) by creating new primary partition(s)
+there and making new filesystem(s).
