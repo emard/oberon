@@ -5,7 +5,7 @@
 
 module bram_true2p_2clk
 #(
-  parameter dual_port = 0,
+  parameter dual_port = 1,
   parameter data_width = 8,
   parameter addr_width = 6,
   parameter initial_file = "initial.mem"
@@ -18,9 +18,9 @@ module bram_true2p_2clk
 );
   // Declare the RAM variable
   reg [data_width-1:0] ram[2**addr_width-1:0];
-  initial $readmemh(initial_file);
+  initial $readmemh(initial_file, ram);
 
-  always @ (posedge clk_a)
+  always @(posedge clk_a)
   begin
     // Port A
     if(clken_a)
