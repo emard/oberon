@@ -194,13 +194,13 @@ module cache_controller(
           .clk_a(ddr_clk),
           .clken_a(cache_write_data | cache_read_data),
           .addr_a({blk, ~index[`SETS-1:2], index[1:0], lowaddr[6:1]}),
-          .we_a({cache_write_data & lowaddr[0], cache_write_data & lowaddr[0], cache_write_data & ~lowaddr[0], cache_write_data & ~lowaddr[0]}),
+          .we_a({{2{lowaddr[0]}}, {2{~lowaddr[0]}}} & {4{cache_write_data}}),
           .data_in_a({ddr_din, ddr_din}),
           .data_out_a(cache_QA),
           .clk_b(~clk),
           .clken_b(mreq & hit & st0),
           .addr_b({blk, ~index[`SETS-1:2], index[1:0], addr[7:2]}),
-          .we_b(wmask & {wr, wr, wr, wr}),
+          .we_b(wmask & {4{wr}}),
           .data_in_b(din),
           .data_out_b(dout)
         );
