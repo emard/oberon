@@ -17,7 +17,7 @@ module vqueue_portable
   output AlmostFull // unused
 );
   reg [addr_width-1:0] wraddr, rdaddr;
-  wire [addr_width-1:0] rdaddr_next;
+  wire [addr_width-1:0] rdaddr_next, addr_diff;
 
   always @(posedge WrClock)
   begin
@@ -34,7 +34,8 @@ module vqueue_portable
   end
 
   assign Empty = wraddr == rdaddr ? 1'b1 : 1'b0;
-  assign AlmostEmpty = wraddr == rdaddr_next ? 1'b1 : 1'b0;
+  assign addr_diff = wraddr - rdaddr;
+  assign AlmostEmpty = addr_diff < 32 ? 1'b1 : 1'b0;
 
   bram_true2p_2clk
   #(

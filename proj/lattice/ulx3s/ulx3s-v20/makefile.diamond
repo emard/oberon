@@ -75,6 +75,7 @@ VERILOG_FILES = \
   ../../../../hdl/VID.OStation.v \
   ../../../../hdl/bram32bit.v \
   ../../../../hdl/vqueue/vqueue.v \
+  ../../../../hdl/vqueue_portable.v \
   ../../../../hdl/dvi/fake_differential.v \
 
 VHDL_FILES = \
