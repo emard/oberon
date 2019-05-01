@@ -1,5 +1,10 @@
+/*
+FIXME: whole picture is shifted cca 16 pixels to the left
+*/
+
 module vqueue
 #(
+  parameter almost_empty = 128,
   parameter addr_width = 11
 )
 (
@@ -35,7 +40,7 @@ module vqueue
 
   assign Empty = wraddr == rdaddr ? 1'b1 : 1'b0;
   assign addr_diff = wraddr - rdaddr;
-  assign AlmostEmpty = addr_diff < 32 ? 1'b1 : 1'b0;
+  assign AlmostEmpty = addr_diff < almost_empty ? 1'b1 : 1'b0;
 
   bram_true2p_2clk
   #(
