@@ -8,6 +8,8 @@ module bram_true2p_2clk
   parameter dual_port = 1,
   parameter data_width = 8,
   parameter addr_width = 6,
+  parameter pass_thru_a = 0, // unused
+  parameter pass_thru_b = 0, // unused
   parameter initial_file = "initial.mem"
 )
 (
