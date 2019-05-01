@@ -1,4 +1,4 @@
-module vqueue_portable
+module vqueue
 #(
   parameter addr_width = 11
 )

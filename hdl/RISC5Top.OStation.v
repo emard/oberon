@@ -272,7 +272,7 @@ end
 	reg [15:0]video_din;
 	reg vd1 = 1'b0;
 	wire almost_empty;
-	vqueue_portable vqueue_inst
+	vqueue vqueue_inst
 	(
 	  .WrClock(clk_sdr), // input wr_clk
 	  .RdClock(clk), // input rd_clk
