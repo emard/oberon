@@ -14,14 +14,15 @@ module bram32bit
 );
   generate
     genvar i;
-    for(i = 0; i < 3; i++)
+    for(i = 0; i < 4; i++)
     begin
       bram_true2p_2clk
       #(
         .dual_port(1),
         .data_width(8),
-        .addr_width(addr_width),
-        .initial_file("cache_init"+i+".mem")
+        .pass_thru_a(1),
+        .pass_thru_b(1),
+        .addr_width(addr_width)
       )
       bram_true2p_2clk_inst
       (

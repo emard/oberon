@@ -73,18 +73,18 @@ VERILOG_FILES = \
   ../../../../hdl/FPDivider.v \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
-  ../../../../hdl/cache/cache.v \
+  ../../../../hdl/bram32bit.v \
   ../../../../hdl/vqueue/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
 
 VHDL_FILES = \
+  ../../../../hdl/bram_true2p_2clk.vhd \
   ../../../../hdl/dvi/vga.vhd \
   ../../../../hdl/dvi/vga2dvid.vhd \
   ../../../../hdl/dvi/tmds_encoder.vhd \
 
 # lattice diamond vendor-specific
 SBX_FILES = \
-  ../../../../hdl/cache/cache.sbx \
   ../../../../hdl/vqueue/vqueue.sbx \
   
 STRATEGY = ../../../../strategy/Oberon_SDRAM1.sty

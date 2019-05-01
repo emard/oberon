@@ -163,7 +163,8 @@ module cache_controller(
 		if(cache_write_data || cache_read_data) lowaddr <= lowaddr + 1;
 		ddr_dout <= lowaddr[0] ? cache_QA[15:0] : cache_QA[31:16];
 	end
-		
+
+/*		
 	cache cache_mem
 	(
 		.ClockA(ddr_clk), // input clka
@@ -183,7 +184,26 @@ module cache_controller(
 		.ResetA(1'b0),
 		.ResetB(1'b0)
 	);
-
+*/
+        bram32bit
+        #(
+          .addr_width(12)
+        )
+        bram32bit_inst
+        (
+          .clk_a(ddr_clk),
+          .clken_a(cache_write_data | cache_read_data),
+          .addr_a({blk, ~index[`SETS-1:2], index[1:0], lowaddr[6:1]}),
+          .we_a({cache_write_data & lowaddr[0], cache_write_data & lowaddr[0], cache_write_data & ~lowaddr[0], cache_write_data & ~lowaddr[0]}),
+          .data_in_a({ddr_din, ddr_din}),
+          .data_out_a(cache_QA),
+          .clk_b(~clk),
+          .clken_b(mreq & hit & st0),
+          .addr_b({blk, ~index[`SETS-1:2], index[1:0], addr[7:2]}),
+          .we_b(wmask & {wr, wr, wr, wr}),
+          .data_in_b(din),
+          .data_out_b(dout)
+        );
 
 //	for(i=0; i<(1<<`WAYS); i=i+1)
 		always @(posedge clk)
