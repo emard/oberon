@@ -35,7 +35,7 @@ module ulx3s_v20(
         inout [3:0] sd_d,
 
 //	-- PS2 interface (Both ports accessible via Y-splitter cable)
-        // output usb_fpga_pu_dp, usb_fpga_pu_dn,
+        output usb_fpga_pu_dp, usb_fpga_pu_dn,
         inout usb_fpga_dp, usb_fpga_dn // enable internal pullups at constraints file
     );
 	assign wifi_gpio0 = btn[0];
@@ -44,8 +44,8 @@ module ulx3s_v20(
 	assign sdram_cke = 1'b1; // -- SDRAM clock enable
 	// assign sd_d[2:1] = 2'bzz; // set as inputs with pullups enabled at constraints file
 
-	//assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3vcc through 1.5K resistor
-	//assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3vcc through 1.5K resistor
+	assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3V through 1.5K resistor
+	assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3V through 1.5K resistor
 	
 	wire [2:0] clocks_video;
 	clk_25_375_75_25
@@ -101,10 +101,10 @@ module ulx3s_v20(
 		.VGA_G(vga_g),
 		.VGA_B(vga_b),
 
-		.PS2CLKA(usb_fpga_dp), // keyboard clock
-		.PS2DATA(usb_fpga_dn), // keyboard data
-		.PS2CLKB(gn[0]), // mouse clock
-		.PS2DATB(gn[1]), // mouse data
+		.PS2CLKA(gn[0]), // keyboard clock
+		.PS2DATA(gn[1]), // keyboard data
+		.PS2CLKB(usb_fpga_dp), // mouse clock
+		.PS2DATB(usb_fpga_dn), // mouse data
 
 		.gpio(gp[9:2]),
 
