@@ -23,13 +23,18 @@ CONNECTION WITH THE DEALINGS IN OR USE OR PERFORMANCE OF THE SOFTWARE.*/
 // OberonStation (externally-clocked) ver PR 7.8.15/03.10.15
 // Modified for SDRAM - Nicolae Dumitrache 2016
 
-module VID(
+module VID
+#(
+    parameter data_delay = 0
+)
+(
     input clk, pclk, inv, ce,
     input [31:0] viddata,
     output reg req = 1'b1,  // SRAM read request
     output hsync, vsync,  // to display
-	output de,
-    output [5:0] RGB);
+    output de,
+    output [5:0] RGB
+);
 
 initial req = 1'b1;
 
@@ -47,7 +52,7 @@ assign hend = (hcnt == 1343), vend = (vcnt == 801);
 assign vblank = (vcnt[8] & vcnt[9]);  // (vcnt >= 768)
 assign hsync = ~((hcnt >= 1080+6) & (hcnt < 1184+6));  // -ve polarity
 assign vsync = (vcnt >= 771) & (vcnt < 776);  // +ve polarity
-assign xfer = (hcnt[4:0] == 6);  // data delay > hcnt cycle + req cycle
+assign xfer = (hcnt[4:0] == data_delay);  // data delay > hcnt cycle + req cycle
 assign vid = (pixbuf[0] ^ inv) & ~hblank & ~vblank;
 assign RGB = {6{vid}};
 //wire vidadr = Org + {3'b0, ~vcnt, hword};

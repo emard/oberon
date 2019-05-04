@@ -4,8 +4,8 @@ FIXME: whole picture is shifted cca 16 pixels to the left
 
 module vqueue
 #(
-  parameter almost_empty = 128,
-  parameter addr_width = 11
+  parameter almost_empty = 8, // when less than this numer of elements left
+  parameter addr_width = 5 // queue length: 2**n elements
 )
 (
   input WrClock,
@@ -31,16 +31,16 @@ module vqueue
   end
   
   assign rdaddr_next = rdaddr + 1;
+  assign addr_diff = wraddr - rdaddr;
+  assign Empty = addr_diff == 0 ? 1'b1 : 1'b0;
+  assign AlmostEmpty = addr_diff < almost_empty ? 1'b1 : 1'b0;
 
   always @(posedge RdClock)
   begin
-    if(RdEn == 1'b1 && wraddr != rdaddr)
+    if(RdEn == 1'b1 && addr_diff != 0)
       rdaddr <= rdaddr_next;
   end
 
-  assign Empty = wraddr == rdaddr ? 1'b1 : 1'b0;
-  assign addr_diff = wraddr - rdaddr;
-  assign AlmostEmpty = addr_diff < almost_empty ? 1'b1 : 1'b0;
 
   bram_true2p_2clk
   #(
