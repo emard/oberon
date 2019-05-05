@@ -16,3 +16,9 @@ Image will initialize first 2 primary partitions (out of 4) required for
 oberon, rest of SD card (free space) can be used with
 other OS (linux) by creating new primary partition(s)
 there and making new filesystem(s).
+
+# Latest development
+
+Oberon is currently actively developed at
+[Oberon-experimental](https://github.com/andreaspirklbauer/Oberon-experimental).
+
