@@ -52,7 +52,9 @@ module ulx3s_v20(
 	clk_25_375_75_25_inst
 	(
 	  .clkin(clk_25mhz),
-	  .clkout(clocks_video)
+	  .clkout0(clocks_video[0]),
+	  .clkout1(clocks_video[1]),
+	  .clkout2(clocks_video[2])
 	);
         wire clk_pixel, clk_shift;
         assign clk_pixel = clocks_video[1]; //  65 MHz
@@ -65,7 +67,9 @@ module ulx3s_v20(
 	clk_25_100_100p_25_inst
 	(
 	  .clkin(clk_25mhz),
-	  .clkout(clocks_system),
+	  .clkout0(clocks_system[0]),
+	  .clkout1(clocks_system[1]),
+	  .clkout2(clocks_system[2]),
 	  .locked(pll_locked)
 	);
 	wire clk_cpu, clk_sdram;

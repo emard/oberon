@@ -1,7 +1,9 @@
 module clk_25_375_75_25
 (
     input clkin, // 25 MHz, 0 deg
-    output [2:0] clkout, // 0: 375 MHz, 0 deg; 1: 75 MHz, 0 deg; 2: 25 MHz, 0 deg
+    output clkout0, // 375 MHz, 0 deg
+    output clkout1, // 75 MHz, 0 deg
+    output clkout2, // 25 MHz, 0 deg
     output locked
 );
 wire clkfb;
@@ -10,8 +12,8 @@ wire clkop;
 (* ICP_CURRENT="12" *) (* LPF_RESISTOR="8" *) (* MFG_ENABLE_FILTEROPAMP="1" *) (* MFG_GMCREF_SEL="2" *)
 EHXPLLL #(
         .PLLRST_ENA("DISABLED"),
-        .STDBY_ENABLE("DISABLED"),
         .INTFB_WAKE("DISABLED"),
+        .STDBY_ENABLE("DISABLED"),
         .DPHASE_SOURCE("DISABLED"),
         .CLKOP_FPHASE(0),
         .CLKOP_CPHASE(0),
@@ -34,18 +36,17 @@ EHXPLLL #(
         .CLKFB(clkfb),
         .CLKINTFB(clkfb),
         .CLKOP(clkop),
-        .CLKOS(clkout[1]),
-        .CLKOS2(clkout[2]),
+        .CLKOS(clkout1),
+        .CLKOS2(clkout2),
         .RST(1'b0),
         .STDBY(1'b0),
         .PHASESEL0(1'b0),
         .PHASESEL1(1'b0),
-        .PHASEDIR(1'b1),
-        .PHASESTEP(1'b1),
-        .PHASELOADREG(1'b1),
+        .PHASEDIR(1'b0),
+        .PHASESTEP(1'b0),
         .PLLWAKESYNC(1'b0),
         .ENCLKOP(1'b0),
         .LOCK(locked)
 	);
-assign clkout[0] = clkop;
+assign clkout0 = clkop;
 endmodule
