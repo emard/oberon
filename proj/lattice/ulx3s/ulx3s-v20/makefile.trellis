@@ -1,8 +1,8 @@
 # ******* project, board and chip name *******
-PROJECT = dvi
+PROJECT = oberon
 BOARD = ulx3s
 # 12 25 45 85
-FPGA_SIZE = 85
+FPGA_SIZE = 12
 FPGA_PACKAGE = CABGA381
 
 # ******* if programming with OpenOCD *******
@@ -62,8 +62,7 @@ VERILOG_FILES = \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
   ../../../../hdl/bram_true2p_2clk.v \
-  ../../../../hdl/bram_true2p_2clk2.v \
-  ../../../../hdl/bram32bit.v \
+  ../../../../hdl/lattice/bram32bit.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
 
