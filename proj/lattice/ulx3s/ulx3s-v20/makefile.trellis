@@ -2,7 +2,7 @@
 PROJECT = dvi
 BOARD = ulx3s
 # 12 25 45 85
-FPGA_SIZE = 12
+FPGA_SIZE = 85
 FPGA_PACKAGE = CABGA381
 
 # ******* if programming with OpenOCD *******
@@ -24,14 +24,6 @@ TOP_MODULE_FILE = ../../../../hdl/top/$(TOP_MODULE)_top.v
 
 CLK0_NAME = clk_25_375_75_25
 CLK0_FILE_NAME = clocks/$(CLK0_NAME).v
-CLK0_OPTIONS_OLD = \
-  --input=25 \
-  --output=375 \
-  --s1=75 \
-  --p1=0 \
-  --s2=25 \
-  --p2=0
-# for new ecppll: to override above, rename CLK0_OPTIONS_NEW -> CLK0_OPTIONS
 CLK0_OPTIONS = \
   --module=$(CLK0_NAME) \
   --clkin=25 \
@@ -70,6 +62,7 @@ VERILOG_FILES = \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
   ../../../../hdl/bram_true2p_2clk.v \
+  ../../../../hdl/bram_true2p_2clk2.v \
   ../../../../hdl/bram32bit.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
@@ -78,6 +71,10 @@ VHDL_FILES = \
   ../../../../hdl/dvi/vga.vhd \
   ../../../../hdl/dvi/vga2dvid.vhd \
   ../../../../hdl/dvi/tmds_encoder.vhd \
+
+# synthesis options
+#YOSYS_OPTIONS = -noccu2
+NEXTPNR_OPTIONS = --timing-allow-fail
 
 SCRIPTS = ../../../../scripts
 include $(SCRIPTS)/diamond_path.mk
