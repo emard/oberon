@@ -77,8 +77,8 @@ module bram32bit
 		.DOA0(doa_1[0]), .DOA1(doa_1[1]), .DOA2(doa_1[2]), .DOA3(doa_1[3]), .DOA4(doa_1[4]), .DOA5(doa_1[5]), .DOA6(doa_1[6]), .DOA7(doa_1[7]), .DOA8(doa_1[8]), .DOA9(doa_1[9]), .DOA10(doa_1[10]), .DOA11(doa_1[11]), .DOA12(doa_1[12]), .DOA13(doa_1[13]), .DOA14(doa_1[14]), .DOA15(doa_1[15]), .DOA16(doa_1[16]), .DOA17(doa_1[17]),
 		.DOB0(dob_1[0]), .DOB1(dob_1[1]), .DOB2(dob_1[2]), .DOB3(dob_1[3]), .DOB4(dob_1[4]), .DOB5(dob_1[5]), .DOB6(dob_1[6]), .DOB7(dob_1[7]), .DOB8(dob_1[8]), .DOB9(dob_1[9]), .DOB10(dob_1[10]), .DOB11(dob_1[11]), .DOB12(dob_1[12]), .DOB13(dob_1[13]), .DOB14(dob_1[14]), .DOB15(dob_1[15]), .DOB16(dob_1[16]), .DOB17(dob_1[17]),
 		.CLKA(clk_a), .CLKB(clk_b),
-		.WEA(|we_a), .CEA(clken_a), .OCEA(clken_a),
-		.WEB(|we_b), .CEB(clken_b), .OCEB(clken_b),
+		.WEA(we_a[0]|we_a[1]), .CEA(clken_a), .OCEA(clken_a),
+		.WEB(we_b[0]|we_b[1]), .CEB(clken_b), .OCEB(clken_b),
 		.CSA2 (1'b0), .CSA1 (1'b0), .CSA0 (1'b0), .CSB2 (1'b0), .CSB1 (1'b0), .CSB0 (1'b0),
 		.RSTA(1'b0), .RSTB(1'b0)
 	);
@@ -97,8 +97,8 @@ module bram32bit
 		.DOA0(doa_2[0]), .DOA1(doa_2[1]), .DOA2(doa_2[2]), .DOA3(doa_2[3]), .DOA4(doa_2[4]), .DOA5(doa_2[5]), .DOA6(doa_2[6]), .DOA7(doa_2[7]), .DOA8(doa_2[8]), .DOA9(doa_2[9]), .DOA10(doa_2[10]), .DOA11(doa_2[11]), .DOA12(doa_2[12]), .DOA13(doa_2[13]), .DOA14(doa_2[14]), .DOA15(doa_2[15]), .DOA16(doa_2[16]), .DOA17(doa_2[17]),
 		.DOB0(dob_2[0]), .DOB1(dob_2[1]), .DOB2(dob_2[2]), .DOB3(dob_2[3]), .DOB4(dob_2[4]), .DOB5(dob_2[5]), .DOB6(dob_2[6]), .DOB7(dob_2[7]), .DOB8(dob_2[8]), .DOB9(dob_2[9]), .DOB10(dob_2[10]), .DOB11(dob_2[11]), .DOB12(dob_2[12]), .DOB13(dob_2[13]), .DOB14(dob_2[14]), .DOB15(dob_2[15]), .DOB16(dob_2[16]), .DOB17(dob_2[17]),
 		.CLKA(clk_a), .CLKB(clk_b),
-		.WEA(|we_a), .CEA(clken_a), .OCEA(clken_a),
-		.WEB(|we_b), .CEB(clken_b), .OCEB(clken_b),
+		.WEA(we_a[2]|we_a[3]), .CEA(clken_a), .OCEA(clken_a),
+		.WEB(we_b[2]|we_b[3]), .CEB(clken_b), .OCEB(clken_b),
 		.CSA2 (1'b0), .CSA1 (1'b0), .CSA0 (1'b0), .CSB2 (1'b0), .CSB1 (1'b0), .CSB0 (1'b0),
 		.RSTA(1'b0), .RSTB(1'b0)
 	);
