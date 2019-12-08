@@ -63,7 +63,6 @@ VERILOG_FILES = \
   ../../../../hdl/cache_controller.v \
   ../../../../hdl/sdram.v \
   ../../../../hdl/PS2.v \
-  ../../../../hdl/MouseM.v \
   ../../../../hdl/RS232R.v \
   ../../../../hdl/RS232T.v \
   ../../../../hdl/SPI.v \
@@ -77,8 +76,11 @@ VERILOG_FILES = \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
 
+#  ../../../../hdl/MouseM.v \
+
 VHDL_FILES = \
   ../../../../hdl/bram_true2p_2clk.vhd \
+  ../../../../hdl/mousem.vhd \
   ../../../../hdl/dvi/vga.vhd \
   ../../../../hdl/dvi/vga2dvid.vhd \
   ../../../../hdl/dvi/tmds_encoder.vhd \

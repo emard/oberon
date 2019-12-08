@@ -138,7 +138,15 @@ VID vid(.clk(clk), .ce(qready), .pclk(pclk), .req(dspreq), .inv(~swi[7]),
    .viddata(inbusvid), .de(de), .RGB(RGB), .hsync(vga_hsync), .vsync(vga_vsync));
 PS2 kbd(.clk(clk), .rst(rst), .done(doneKbd), .rdy(rdyKbd), .shift(),
    .data(dataKbd), .PS2C(PS2CLKA), .PS2D(PS2DATA));
-MouseM Ms(.clk(clk), .rst(rst), .msclk(PS2CLKB), .msdat(PS2DATB), .out(dataMs));
+// MouseM Ms(.clk(clk), .rst(rst), .msclk(PS2CLKB), .msdat(PS2DATB), .out(dataMs));
+mousem
+#(.c_x_bits(10), .c_y_bits(10))
+Ms
+(
+.clk(clk), .clk_ena(1'b1), .ps2m_reset(~rst), .ps2m_clk(PS2CLKB), .ps2m_dat(PS2DATB),
+.x(dataMs[9:0]), .y(dataMs[21:12]), .btn(dataMs[26:24])
+);
+assign dataMs[27] = 1'b1;
 
 
 assign inbus = ~ioenb ? inbus0 :
