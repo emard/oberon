@@ -140,7 +140,7 @@ PS2 kbd(.clk(clk), .rst(rst), .done(doneKbd), .rdy(rdyKbd), .shift(),
    .data(dataKbd), .PS2C(PS2CLKA), .PS2D(PS2DATA));
 // MouseM Ms(.clk(clk), .rst(rst), .msclk(PS2CLKB), .msdat(PS2DATB), .out(dataMs));
 mousem
-#(.c_x_bits(10), .c_y_bits(10))
+#(.c_x_bits(10), .c_y_bits(10), .C_y_neg(1))
 Ms
 (
 .clk(clk), .clk_ena(1'b1), .ps2m_reset(~rst), .ps2m_clk(PS2CLKB), .ps2m_dat(PS2DATB),

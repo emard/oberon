@@ -31,11 +31,12 @@ use ieee.std_logic_arith.all;
 entity mousem is
   generic
   (
-    c_x_bits: integer range 8 to 11 := 8;
-    c_y_bits: integer range 8 to 11 := 8;
-    c_z_bits: integer range 4 to 11 := 4;
-    c_z_ena:  integer range 0 to  1 := 1; -- 1:yes wheel, 0:not wheel
-    c_hotplug:integer range 0 to  1 := 1  -- 1:mouse hotplug detection 0:no mouse hotplug (save LUTs)
+    c_x_bits:   integer range 8 to 11 := 8;
+    c_y_bits:   integer range 8 to 11 := 8;
+    c_y_neg:    integer range 0 to  1 := 0;
+    c_z_bits:   integer range 4 to 11 := 4;
+    c_z_ena:    integer range 0 to  1 := 1; -- 1:yes wheel, 0:not wheel
+    c_hotplug:  integer range 0 to  1 := 1  -- 1:mouse hotplug detection 0:no mouse hotplug (save LUTs)
   );
   port
   (
@@ -172,9 +173,16 @@ begin
   x_next <= (others => '0') when run = '0'
         else r_x + s_dx when done = '1'
         else r_x;
+  G_not_invert_y: if C_y_neg = 0 generate
   y_next <= (others => '0') when run = '0'
-        else r_y - s_dy when done = '1'
+        else r_y - s_dy when done = '1' -- PS2 mouse sends negative dy
         else r_y;
+  end generate;
+  G_yes_invert_y: if C_y_neg = 1 generate
+  y_next <= (others => '0') when run = '0'
+        else r_y + s_dy when done = '1' -- PS2 mouse sends negative dy
+        else r_y;
+  end generate;
   z_next <= (others => '0') when run = '0'
         else r_z - s_dz when done = '1'
         else r_z;
