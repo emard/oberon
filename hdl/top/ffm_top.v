@@ -2,8 +2,6 @@
 module ffm_top
 (
     input  clk_100mhz_p,  // core should use only positive when in differential mode
-    input  [6:0] btn,
-    output [3:1] led,
     output [3:0] vid_d_p, // core should use only positive when in differential mode
     // RS232
     output uart3_txd,
@@ -54,8 +52,10 @@ module ffm_top
     );
     wire clk_cpu, clk_sdram;
     assign clk_sdram = clocks_system[0]; // 100 MHz sdram controller
-    assign sdram_clk = clocks_system[1]; // 100 MHz 225 deg SDRAM chip
+    assign dr_clk = clocks_system[1]; // 100 MHz 225 deg SDRAM chip
     assign clk_cpu = clocks_system[2];   //  25 MHz
+    
+    wire [3:0] led;
 
     wire vga_hsync, vga_vsync, vga_blank;
     wire [1:0] vga_r, vga_g, vga_b;
@@ -98,13 +98,20 @@ module ffm_top
       .SDRAM_nWE(dr_we_n),
       .SDRAM_BA(dr_ba),
       .SDRAM_ADDR(dr_a),
-      .SDRAM_DATA(dr_d),
+      .SDRAM_DATA(dr_d[15:0]),
       .SDRAM_DQML(dr_dqm[0]),
       .SDRAM_DQMH(dr_dqm[1])
     );
     assign dr_cke = 1'b1;
     assign dr_dqm[2] = 1'b1;
     assign dr_dqm[3] = 1'b1;
+    assign dr_d[31:16] = 16'hzzzz;
+
+    assign sd_m_d[1] = 1'b1;
+    assign sd_m_d[2] = 1'b1;
+    
+    assign fioa[5] = led[2];
+    assign fioa[7] = led[3];
 
     // VGA to digital video converter
     wire [1:0] tmds[3:0];
