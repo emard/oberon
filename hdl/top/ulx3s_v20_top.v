@@ -105,8 +105,8 @@ module ulx3s_v20(
 		.VGA_G(vga_g),
 		.VGA_B(vga_b),
 
-		.PS2CLKA(gn[0]), // keyboard clock
-		.PS2DATA(gn[1]), // keyboard data
+		.PS2CLKA(gn[21]), // keyboard clock US3, flat cable on pins up
+		.PS2DATA(gp[21]), // keyboard data US3, flat cable on pins up
 		.PS2CLKB(usb_fpga_dp), // mouse clock
 		.PS2DATB(usb_fpga_dn), // mouse data
 
@@ -122,7 +122,8 @@ module ulx3s_v20(
 		.SDRAM_DQML(sdram_dqm[0]),
 		.SDRAM_DQMH(sdram_dqm[1])
 	);
-
+    assign gp[22] = 1'b1; // US3 PULLUP
+    assign gn[22] = 1'b1; // US3 PULLUP
 
 /*
     wire [7:0] vga_r8, vga_g8, vga_b8;
