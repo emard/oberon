@@ -27,15 +27,7 @@ TOP_MODULE = ulx3s_v20
 TOP_MODULE_FILE = ../../../../hdl/top/$(TOP_MODULE)_top.v
 
 CLK0_NAME = clk_25_375_75_25
-CLK0_FILE_NAME = clocks/$(CLK0_NAME).v
-CLK0_OPTIONS_OLD = \
-  --input=25 \
-  --output=375 \
-  --s1=75 \
-  --p1=0 \
-  --s2=25 \
-  --p2=0
-# for new ecppll: to override above, rename CLK0_OPTIONS_NEW -> CLK0_OPTIONS
+CLK0_FILE_NAME = ../../../../hdl/lattice/$(CLK0_NAME).v
 CLK0_OPTIONS = \
   --module=$(CLK0_NAME) \
   --clkin=25 \
@@ -44,7 +36,7 @@ CLK0_OPTIONS = \
   --clkout2=25
 
 CLK1_NAME = clk_25_100_100p_25
-CLK1_FILE_NAME = clocks/$(CLK1_NAME).v
+CLK1_FILE_NAME = ../../../../hdl/lattice/$(CLK1_NAME).v
 CLK1_OPTIONS = \
   --module=$(CLK1_NAME) \
   --clkin=25 \
@@ -55,8 +47,8 @@ CLK1_OPTIONS = \
 
 VERILOG_FILES = \
   $(TOP_MODULE_FILE) \
-  clocks/$(CLK0_NAME).v \
-  clocks/$(CLK1_NAME).v \
+  $(CLK0_FILE_NAME) \
+  $(CLK1_FILE_NAME) \
   ../../../../hdl/RISC5Top.OStation.v \
   ../../../../hdl/RISC5.v \
   ../../../../hdl/PROM.v \
@@ -75,8 +67,6 @@ VERILOG_FILES = \
   ../../../../hdl/bram32bit.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
-
-#  ../../../../hdl/MouseM.v \
 
 VHDL_FILES = \
   ../../../../hdl/bram_true2p_2clk.vhd \
