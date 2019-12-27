@@ -41,6 +41,7 @@ module RISC5Top(
 	output [1:0] VGA_R, VGA_G, VGA_B,
 	input PS2CLKA, PS2DATA, // keyboard
 	inout PS2CLKB, PS2DATB,
+	output [2:0] MOUSEBTN,
 	inout [7:0]gpio,
 
 	output SDRAM_nCAS,
@@ -139,14 +140,19 @@ VID vid(.clk(clk), .ce(qready), .pclk(pclk), .req(dspreq), .inv(~swi[7]),
 PS2 kbd(.clk(clk), .rst(rst), .done(doneKbd), .rdy(rdyKbd), .shift(),
    .data(dataKbd), .PS2C(PS2CLKA), .PS2D(PS2DATA));
 // MouseM Ms(.clk(clk), .rst(rst), .msclk(PS2CLKB), .msdat(PS2DATB), .out(dataMs));
+wire [2:0] mousebtn;
 mousem
 #(.c_x_bits(10), .c_y_bits(10), .C_y_neg(1))
 Ms
 (
 .clk(clk), .clk_ena(1'b1), .ps2m_reset(~rst), .ps2m_clk(PS2CLKB), .ps2m_dat(PS2DATB),
-.x(dataMs[9:0]), .y(dataMs[21:12]), .btn(dataMs[26:24])
+.x(dataMs[9:0]), .y(dataMs[21:12]), .btn(mousebtn)
 );
+assign dataMs[24] = mousebtn[0]; // left
+assign dataMs[25] = mousebtn[2]; // middle
+assign dataMs[26] = mousebtn[1]; // right
 assign dataMs[27] = 1'b1;
+assign MOUSEBTN = mousebtn; // PS/2 direct output for debugging
 
 
 assign inbus = ~ioenb ? inbus0 :

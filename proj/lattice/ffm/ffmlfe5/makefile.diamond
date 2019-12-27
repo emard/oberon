@@ -30,14 +30,6 @@ TOP_MODULE_FILE = ../../../../hdl/top/$(TOP_MODULE).v
 
 CLK0_NAME = clk_100_375_75_25
 CLK0_FILE_NAME = clocks/$(CLK0_NAME).v
-CLK0_OPTIONS_OLD = \
-  --input=100 \
-  --output=375 \
-  --s1=75 \
-  --p1=0 \
-  --s2=25 \
-  --p2=0
-# for new ecppll: to override above, rename CLK0_OPTIONS_NEW -> CLK0_OPTIONS
 CLK0_OPTIONS = \
   --module=$(CLK0_NAME) \
   --clkin=100 \
@@ -51,8 +43,7 @@ CLK1_OPTIONS = \
   --module=$(CLK1_NAME) \
   --clkin=100 \
   --clkout0=100 \
-  --clkout1=100 \
-  --phase1=225 \
+  --clkout1=100 --phase1=180 \
   --clkout2=25
 
 VERILOG_FILES = \

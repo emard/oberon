@@ -10,9 +10,9 @@ module ffm_top
     inout  [7:0]   fioa,
     inout  [31:20] fiob,
     // SD card (SPI)
-    output sd_m_clk, sd_m_cmd,
-    inout  [3:0] sd_m_d, 
-    input  sd_m_cdet,
+    output sd_f_clk, sd_f_cmd,
+    inout  [3:0] sd_f_d, 
+    input  sd_f_cdet,
     //  SDRAM interface (For use with 16Mx16bit or 32Mx16bit SDR DRAM, depending on version)
     output dr_cs_n,       // chip select
     output dr_clk,        // clock to SDRAM
@@ -54,29 +54,32 @@ module ffm_top
     assign clk_sdram = clocks_system[0]; // 100 MHz sdram controller
     assign dr_clk = clocks_system[1]; // 100 MHz 225 deg SDRAM chip
     assign clk_cpu = clocks_system[2];   //  25 MHz
-    
+
     wire [3:0] led;
 
     wire vga_hsync, vga_vsync, vga_blank;
     wire [1:0] vga_r, vga_g, vga_b;
-
+    
     RISC5Top sys_inst
     (
       .CLK_CPU(clk_cpu),
       .CLK_SDRAM(clk_sdram),
       .CLK_PIXEL(clk_pixel),
+
       .BTN_NORTH(1'b0), // up
       .BTN_SOUTH(1'b0), // down
       .BTN_WEST(1'b0),  // left
-      .BTN_EAST(1'b0),  // right (reset btn)
+      .BTN_EAST(~pll_locked),  // right (reset btn)
+
       .RX(uart3_rxd),   // RS-232
       .TX(uart3_txd),
+
       .LED(led),
 
-      .SD_DO(sd_m_d[0]), // SPI - SD card & network
-      .SD_DI(sd_m_cmd),
-      .SD_CK(sd_m_clk),
-      .SD_nCS(sd_m_d[3]),
+      .SD_DO(sd_f_d[0]), // SPI - SD card & network
+      .SD_DI(sd_f_cmd),
+      .SD_CK(sd_f_clk),
+      .SD_nCS(sd_f_d[3]),
 
       .VGA_HSYNC(vga_hsync),
       .VGA_VSYNC(vga_vsync),
@@ -107,12 +110,12 @@ module ffm_top
     assign dr_dqm[3] = 1'b1;
     assign dr_d[31:16] = 16'hzzzz;
 
-    assign sd_m_d[1] = 1'b1;
-    assign sd_m_d[2] = 1'b1;
+    assign sd_f_d[1] = 1'b1;
+    assign sd_f_d[2] = 1'b1;
     
     assign fioa[5] = led[2];
     assign fioa[7] = led[3];
-
+    
     // VGA to digital video converter
     wire [1:0] tmds[3:0];
     vga2dvid
