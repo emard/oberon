@@ -2,6 +2,7 @@ module ulx3s_v20(
 //      -- System clock and reset
 	input clk_25mhz, // main clock input from external clock source
 	output wifi_en, wifi_gpio0,
+	inout wifi_gpio16, wifi_gpio17,
 
 //      -- On-board user buttons and status LEDs
 	input [6:0] btn,
@@ -105,10 +106,15 @@ module ulx3s_v20(
 		.VGA_G(vga_g),
 		.VGA_B(vga_b),
 
-		.PS2CLKA(gn[21]), // keyboard clock US3, flat cable on pins up
-		.PS2DATA(gp[21]), // keyboard data US3, flat cable on pins up
-		.PS2CLKB(usb_fpga_dp), // mouse clock
-		.PS2DATB(usb_fpga_dn), // mouse data
+		.PS2CLKA(gp[11]),      // ESP32 keyboard clock wifi_gpio26
+		.PS2DATA(gn[11]),      // ESP32 keyboard data wifi_gpio25
+		.PS2CLKB(wifi_gpio17), // ESP32 mouse clock
+		.PS2DATB(wifi_gpio16), // ESP32 mouse data
+
+		//.PS2CLKA(gp[21]), // keyboard clock US3, flat cable on pins up
+		//.PS2DATA(gn[21]), // keyboard data US3, flat cable on pins up
+		//.PS2CLKB(usb_fpga_dp), // mouse clock
+		//.PS2DATB(usb_fpga_dn), // mouse data
 
 		.gpio(gp[9:2]),
 
