@@ -71,8 +71,8 @@ module bram32bit
 		.DOA9(doa[i][8+j*16]), .DOA10(doa[i][ 9+j*16]), .DOA11(doa[i][10+j*16]), .DOA12(doa[i][11+j*16]), .DOA13(doa[i][12+j*16]), .DOA14(doa[i][13+j*16]), .DOA15(doa[i][14+j*16]), .DOA16(doa[i][15+j*16]), .DOA17(),
 		.DOB0(dob[i][0+j*16]),  .DOB1(dob[i][ 1+j*16]),  .DOB2(dob[i][ 2+j*16]),  .DOB3(dob[i][ 3+j*16]),  .DOB4(dob[i][ 4+j*16]),  .DOB5(dob[i][ 5+j*16]),  .DOB6(dob[i][ 6+j*16]),  .DOB7(dob[i][ 7+j*16]), .DOB8(),
 		.DOB9(dob[i][8+j*16]), .DOB10(dob[i][ 9+j*16]), .DOB11(dob[i][10+j*16]), .DOB12(dob[i][11+j*16]), .DOB13(dob[i][12+j*16]), .DOB14(dob[i][13+j*16]), .DOB15(dob[i][14+j*16]), .DOB16(dob[i][15+j*16]), .DOB17(),
-		.WEA(we_a[0+j*2]|we_a[1+j*2]), .CEA(clken_a), .OCEA(clken_a),
-		.WEB(we_b[0+j*2]|we_b[1+j*2]), .CEB(clken_b), .OCEB(clken_b),
+		.WEA(wr_a), .CEA(clken_a), .OCEA(clken_a),
+		.WEB(wr_b), .CEB(clken_b), .OCEB(clken_b),
 		.CSA2(1'b0), .CSA1(addr_a[11]), .CSA0(addr_a[10]),
 		.CSB2(1'b0), .CSB1(addr_b[11]), .CSB0(addr_b[10]),
 		.RSTA(1'b0), .RSTB(1'b0)
@@ -108,8 +108,8 @@ module bram32bit
 		.DOA9(doa[i][8+j*16]), .DOA10(doa[i][ 9+j*16]), .DOA11(doa[i][10+j*16]), .DOA12(doa[i][11+j*16]), .DOA13(doa[i][12+j*16]), .DOA14(doa[i][13+j*16]), .DOA15(doa[i][14+j*16]), .DOA16(doa[i][15+j*16]), .DOA17(),
 		.DOB0(dob[i][0+j*16]),  .DOB1(dob[i][ 1+j*16]),  .DOB2(dob[i][ 2+j*16]),  .DOB3(dob[i][ 3+j*16]),  .DOB4(dob[i][ 4+j*16]),  .DOB5(dob[i][ 5+j*16]),  .DOB6(dob[i][ 6+j*16]),  .DOB7(dob[i][ 7+j*16]), .DOB8(),
 		.DOB9(dob[i][8+j*16]), .DOB10(dob[i][ 9+j*16]), .DOB11(dob[i][10+j*16]), .DOB12(dob[i][11+j*16]), .DOB13(dob[i][12+j*16]), .DOB14(dob[i][13+j*16]), .DOB15(dob[i][14+j*16]), .DOB16(dob[i][15+j*16]), .DOB17(),
-		.WEA(we_a[0+j*2]|we_a[1+j*2]), .CEA(clken_a), .OCEA(clken_a),
-		.WEB(we_b[0+j*2]|we_b[1+j*2]), .CEB(clken_b), .OCEB(clken_b),
+		.WEA(wr_a), .CEA(clken_a), .OCEA(clken_a),
+		.WEB(wr_b), .CEB(clken_b), .OCEB(clken_b),
 		.CSA2(1'b0), .CSA1(addr_a[11]), .CSA0(addr_a[10]),
 		.CSB2(1'b0), .CSB1(addr_b[11]), .CSB0(addr_b[10]),
 		.RSTA(1'b0), .RSTB(1'b0)
@@ -145,8 +145,8 @@ module bram32bit
 		.DOA9(doa[i][8+j*16]), .DOA10(doa[i][ 9+j*16]), .DOA11(doa[i][10+j*16]), .DOA12(doa[i][11+j*16]), .DOA13(doa[i][12+j*16]), .DOA14(doa[i][13+j*16]), .DOA15(doa[i][14+j*16]), .DOA16(doa[i][15+j*16]), .DOA17(),
 		.DOB0(dob[i][0+j*16]),  .DOB1(dob[i][ 1+j*16]),  .DOB2(dob[i][ 2+j*16]),  .DOB3(dob[i][ 3+j*16]),  .DOB4(dob[i][ 4+j*16]),  .DOB5(dob[i][ 5+j*16]),  .DOB6(dob[i][ 6+j*16]),  .DOB7(dob[i][ 7+j*16]), .DOB8(),
 		.DOB9(dob[i][8+j*16]), .DOB10(dob[i][ 9+j*16]), .DOB11(dob[i][10+j*16]), .DOB12(dob[i][11+j*16]), .DOB13(dob[i][12+j*16]), .DOB14(dob[i][13+j*16]), .DOB15(dob[i][14+j*16]), .DOB16(dob[i][15+j*16]), .DOB17(),
-		.WEA(we_a[0+j*2]|we_a[1+j*2]), .CEA(clken_a), .OCEA(clken_a),
-		.WEB(we_b[0+j*2]|we_b[1+j*2]), .CEB(clken_b), .OCEB(clken_b),
+		.WEA(wr_a), .CEA(clken_a), .OCEA(clken_a),
+		.WEB(wr_b), .CEB(clken_b), .OCEB(clken_b),
 		.CSA2(1'b0), .CSA1(addr_a[11]), .CSA0(addr_a[10]),
 		.CSB2(1'b0), .CSB1(addr_b[11]), .CSB0(addr_b[10]),
 		.RSTA(1'b0), .RSTB(1'b0)
@@ -182,8 +182,8 @@ module bram32bit
 		.DOA9(doa[i][8+j*16]), .DOA10(doa[i][ 9+j*16]), .DOA11(doa[i][10+j*16]), .DOA12(doa[i][11+j*16]), .DOA13(doa[i][12+j*16]), .DOA14(doa[i][13+j*16]), .DOA15(doa[i][14+j*16]), .DOA16(doa[i][15+j*16]), .DOA17(),
 		.DOB0(dob[i][0+j*16]),  .DOB1(dob[i][ 1+j*16]),  .DOB2(dob[i][ 2+j*16]),  .DOB3(dob[i][ 3+j*16]),  .DOB4(dob[i][ 4+j*16]),  .DOB5(dob[i][ 5+j*16]),  .DOB6(dob[i][ 6+j*16]),  .DOB7(dob[i][ 7+j*16]), .DOB8(),
 		.DOB9(dob[i][8+j*16]), .DOB10(dob[i][ 9+j*16]), .DOB11(dob[i][10+j*16]), .DOB12(dob[i][11+j*16]), .DOB13(dob[i][12+j*16]), .DOB14(dob[i][13+j*16]), .DOB15(dob[i][14+j*16]), .DOB16(dob[i][15+j*16]), .DOB17(),
-		.WEA(we_a[0+j*2]|we_a[1+j*2]), .CEA(clken_a), .OCEA(clken_a),
-		.WEB(we_b[0+j*2]|we_b[1+j*2]), .CEB(clken_b), .OCEB(clken_b),
+		.WEA(wr_a), .CEA(clken_a), .OCEA(clken_a),
+		.WEB(wr_b), .CEB(clken_b), .OCEB(clken_b),
 		.CSA2(1'b0), .CSA1(addr_a[11]), .CSA0(addr_a[10]),
 		.CSB2(1'b0), .CSB1(addr_b[11]), .CSB0(addr_b[10]),
 		.RSTA(1'b0), .RSTB(1'b0)
