@@ -22,7 +22,7 @@ OPENOCD_INTERFACE=$(SCRIPTS)/ft231x.ocd
 #OPENOCD_INTERFACE=$(SCRIPTS)/ft2232.ocd
 
 # ******* design files *******
-CONSTRAINTS = ../../../../constraints/ulx3s_v20_segpdi.lpf
+CONSTRAINTS = ../../../../constraints/ulx3s_v20.lpf
 TOP_MODULE = ulx3s_v20
 TOP_MODULE_FILE = ../../../../hdl/top/$(TOP_MODULE)_top.v
 
@@ -67,7 +67,6 @@ VERILOG_FILES = \
   ../../../../hdl/VID.OStation.v \
   ../../../../hdl/lattice/bram32bit.v \
   ../../../../hdl/vqueue.v \
-  ../../../../hdl/dvi/fake_differential.v \
 
 #  ../../../../hdl/bram32bit.v \ # works
 #  ../../../../hdl/lattice/bram32bit.v \ # works
