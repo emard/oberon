@@ -1,4 +1,4 @@
-// byte addressable BRAM with initialized content
+// byte addressable BRAM
 
 module bram32bit
 #(
