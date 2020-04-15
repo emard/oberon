@@ -54,8 +54,8 @@ VERILOG_FILES = \
   ../../../../hdl/PROM.v \
   ../../../../hdl/cache_controller.v \
   ../../../../hdl/sdram.v \
-  ../../../../hdl/mousem.v \
   ../../../../hdl/PS2.v \
+  ../../../../hdl/mousem.v \
   ../../../../hdl/RS232R.v \
   ../../../../hdl/RS232T.v \
   ../../../../hdl/SPI.v \
@@ -65,10 +65,12 @@ VERILOG_FILES = \
   ../../../../hdl/FPDivider.v \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
-  ../../../../hdl/bram32bit.v \
+  ../../../../hdl/lattice/bram32bit.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
 
+#  ../../../../hdl/bram32bit.v \ # works
+#  ../../../../hdl/lattice/bram32bit.v \ # works
 
 VHDL_FILES = \
   ../../../../hdl/bram_true2p_2clk.vhd \

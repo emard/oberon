@@ -61,13 +61,11 @@ VERILOG_FILES = \
   ../../../../hdl/FPDivider.v \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
-  ../../../../hdl/bram_true2p_2clk.v \
   ../../../../hdl/lattice/bram32bit.v \
+  ../../../../hdl/bram_true2p_2clk.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/dvi/fake_differential.v \
 
-#  ../../../../hdl/lattice/bram32bit.v \ # FIXME it compiles with trellis but doesn't work
-#  ../../../../hdl/bram32bit.v \ # doesn't compile with trellis
 
 VHDL_FILES = \
   ../../../../hdl/dvi/vga.vhd \
