@@ -258,7 +258,7 @@ JUNK += $(BOARD)_$(FPGA_SIZE)f_$(PROJECT)_flash_$(FLASH_CHIP).vme
 JUNK += $(BOARD)_$(FPGA_SIZE)f.ocd
 JUNK += $(CLK0_FILE_NAME) $(CLK1_FILE_NAME) $(CLK2_FILE_NAME) $(CLK3_FILE_NAME)
 # diamond junk
-JUNK += ${IMPL_DIR} .recovery ._Real_._Math_.vhd reportview.xml
+JUNK += ${IMPL_DIR} .recovery ._Real_._Math_.vhd *.sty reportview.xml
 JUNK += dummy_sym.sort project_tcl.html promote.xml .run_manager.ini
 JUNK += generate_core.tcl generate_ngd.tcl msg_file.log
 
