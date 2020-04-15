@@ -54,6 +54,7 @@ VERILOG_FILES = \
   ../../../../hdl/PROM.v \
   ../../../../hdl/cache_controller.v \
   ../../../../hdl/sdram.v \
+  ../../../../hdl/mousem.v \
   ../../../../hdl/PS2.v \
   ../../../../hdl/RS232R.v \
   ../../../../hdl/RS232T.v \
@@ -70,7 +71,6 @@ VERILOG_FILES = \
 
 VHDL_FILES = \
   ../../../../hdl/bram_true2p_2clk.vhd \
-  ../../../../hdl/mousem.vhd \
   ../../../../hdl/dvi/vga.vhd \
   ../../../../hdl/dvi/vga2dvid.vhd \
   ../../../../hdl/dvi/tmds_encoder.vhd \
