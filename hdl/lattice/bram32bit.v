@@ -37,20 +37,21 @@ module bram32bit
 		.DATA_WIDTH_B(18),
 		.CSDECODE_A(i==0 ? "0b000" : i==1 ? "0b001" : i==2 ? "0b010" : "0b011"),
 		.CSDECODE_B(i==0 ? "0b000" : i==1 ? "0b001" : i==2 ? "0b010" : "0b011"),
-		.WRITEMODE_A("WRITETHROUGH"),
-		.WRITEMODE_B("WRITETHROUGH"),
-		.REGMODE_A("NOREG"),
-		.REGMODE_B("NOREG"),
+		// WRITEMODE and REGMODE can be commented out and it still works
+		//.WRITEMODE_A("WRITETHROUGH"),
+		//.WRITEMODE_B("WRITETHROUGH"),
+		//.REGMODE_A("NOREG"),
+		//.REGMODE_B("NOREG"),
 		.RESETMODE("ASYNC"),
 		.GSR("DISABLED")
 	      )
 	      dp16kd_inst
 	      (
 		.CLKA(clk_a), .CLKB(clk_b),
-		.ADA0(we_a[0+j*2]|~wr_a), .ADA1(we_a[1+j*2]|~wr_a), // byte select
+		.ADA0(we_a[0+j*2]), .ADA1(we_a[1+j*2]), // byte select
 		.ADA2(1'b0), .ADA3(1'b0), // always 0
 		.ADA4(addr_a[0]), .ADA5(addr_a[1]), .ADA6(addr_a[2]), .ADA7(addr_a[3]), .ADA8(addr_a[4]), .ADA9(addr_a[5]), .ADA10(addr_a[6]), .ADA11(addr_a[7]), .ADA12(addr_a[8]), .ADA13(addr_a[9]), // 10-bit address
-		.ADB0(we_b[0+j*2]|~wr_b), .ADB1(we_b[1+j*2]|~wr_b), // byte select
+		.ADB0(we_b[0+j*2]), .ADB1(we_b[1+j*2]), // byte select
 		.ADB2(1'b0), .ADB3(1'b0), // always 0
 		.ADB4(addr_b[0]), .ADB5(addr_b[1]), .ADB6(addr_b[2]), .ADB7(addr_b[3]), .ADB8(addr_b[4]), .ADB9(addr_b[5]), .ADB10(addr_b[6]), .ADB11(addr_b[7]), .ADB12(addr_b[8]), .ADB13(addr_b[9]), // 10-bit address
 		.DIA0(data_in_a[0+j*16]),  .DIA1(data_in_a[ 1+j*16]),  .DIA2(data_in_a[ 2+j*16]),  .DIA3(data_in_a[ 3+j*16]),  .DIA4(data_in_a[ 4+j*16]),  .DIA5(data_in_a[ 5+j*16]),  .DIA6(data_in_a[ 6+j*16]),  .DIA7(data_in_a[ 7+j*16]),  .DIA8(1'b0),
