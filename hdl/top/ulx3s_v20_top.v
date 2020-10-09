@@ -8,7 +8,7 @@ module ulx3s_v20(
 	input [6:0] btn,
 	output [7:0] led,
 
-//      -- User GPIO (18 I/O pins) Header
+//      -- User GPIO (56 I/O pins) Header
 	inout [27:0] gp, gn,  // GPIO Header pins available as one data block
 
 //      -- USB Slave (FT231x) interface 
