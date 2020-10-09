@@ -181,7 +181,7 @@ module ulx3s_v20(
       .in_red(vga_r),
       .in_green(vga_g),
       .in_blue(vga_b),
-      .in_hsync(vga_hsync),
+      .in_hsync(~vga_hsync), // "~" fixes yosys/trells horizontal "traveling" picture
       .in_vsync(vga_vsync),
       .in_blank(vga_blank),
       .out_clock(tmds[3]),
