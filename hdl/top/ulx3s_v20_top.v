@@ -48,31 +48,36 @@ module ulx3s_v20(
 	assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3V through 1.5K resistor
 	assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3V through 1.5K resistor
 	
-	wire [2:0] clocks_video;
-	clk_25_375_75_25
-	clk_25_375_75_25_inst
-	(
-	  .clkin(clk_25mhz),
-	  .clkout0(clocks_video[0]),
-	  .clkout1(clocks_video[1]),
-	  .clkout2(clocks_video[2])
-	);
+	wire [3:0] clocks_video;
+        ecp5pll
+        #(
+            .in_hz( 25*1000000),
+          .out0_hz(375*1000000),
+          .out1_hz( 75*1000000)
+        )
+        ecp5pll_video_inst
+        (
+          .clk_i(clk_25mhz),
+          .clk_o(clocks_video)
+        );
         wire clk_pixel, clk_shift;
-        assign clk_pixel = clocks_video[1]; //  65 MHz
-        assign clk_shift = clocks_video[0]; // 325 MHz
-        // clocks_video[2] // 25 MHz unused
+        assign clk_shift = clocks_video[0]; // 375 MHz
+        assign clk_pixel = clocks_video[1]; //  75 MHz
 
-	wire [2:0] clocks_system;
+	wire [3:0] clocks_system;
 	wire pll_locked;
-	clk_25_100_100p_25
-	clk_25_100_100p_25_inst
-	(
-	  .clkin(clk_25mhz),
-	  .clkout0(clocks_system[0]),
-	  .clkout1(clocks_system[1]),
-	  .clkout2(clocks_system[2]),
-	  .locked(pll_locked)
-	);
+        ecp5pll
+        #(
+            .in_hz( 25*1000000),
+          .out0_hz(100*1000000),
+          .out1_hz(100*1000000), .out1_deg(225),
+          .out2_hz( 25*1000000)
+        )
+        ecp5pll_system_inst
+        (
+          .clk_i(clk_25mhz),
+          .clk_o(clocks_system)
+        );
 	wire clk_cpu, clk_sdram;
 	assign clk_sdram = clocks_system[0]; // 100 MHz sdram controller
 	assign sdram_clk = clocks_system[1]; // 100 MHz 225 deg SDRAM chip
