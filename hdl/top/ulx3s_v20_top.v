@@ -52,8 +52,8 @@ module ulx3s_v20(
         ecp5pll
         #(
             .in_hz( 25*1000000),
-          .out0_hz(375*1000000),
-          .out1_hz( 75*1000000)
+          .out0_hz(325*1000000),
+          .out1_hz( 65*1000000)
         )
         ecp5pll_video_inst
         (
@@ -61,8 +61,8 @@ module ulx3s_v20(
           .clk_o(clocks_video)
         );
         wire clk_pixel, clk_shift;
-        assign clk_shift = clocks_video[0]; // 375 MHz
-        assign clk_pixel = clocks_video[1]; //  75 MHz
+        assign clk_shift = clocks_video[0]; // 325 MHz
+        assign clk_pixel = clocks_video[1]; //  65 MHz
 
 	wire [3:0] clocks_system;
 	wire pll_locked;
@@ -181,7 +181,7 @@ module ulx3s_v20(
       .in_red(vga_r),
       .in_green(vga_g),
       .in_blue(vga_b),
-      .in_hsync(~vga_hsync), // "~" fixes yosys/trells horizontal "traveling" picture
+      .in_hsync(vga_hsync),
       .in_vsync(vga_vsync),
       .in_blank(vga_blank),
       .out_clock(tmds[3]),
