@@ -47,12 +47,12 @@ VERILOG_FILES = \
   ../../../../hdl/lattice/bram32bit.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/lattice/ecp5pll.sv \
+  ../../../../hdl/bram_true2p_2clk.v \
 
 #  ../../../../hdl/bram32bit.v \ # works
 #  ../../../../hdl/lattice/bram32bit.v \ # works
 
 VHDL_FILES = \
-  ../../../../hdl/bram_true2p_2clk.vhd \
   ../../../../hdl/dvi/vga.vhd \
   ../../../../hdl/dvi/vga2dvid.vhd \
   ../../../../hdl/dvi/tmds_encoder.vhd \
