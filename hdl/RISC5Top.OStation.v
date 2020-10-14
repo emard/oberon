@@ -148,9 +148,9 @@ Ms
 .clk(clk), .clk_ena(1'b1), .ps2m_reset(~rst), .ps2m_clk(PS2CLKB), .ps2m_dat(PS2DATB),
 .x(dataMs[9:0]), .y(dataMs[21:12]), .btn(mousebtn)
 );
-assign dataMs[24] = mousebtn[0]; // left
+assign dataMs[24] = mousebtn[1]; // left
 assign dataMs[25] = mousebtn[2]; // middle
-assign dataMs[26] = mousebtn[1]; // right
+assign dataMs[26] = mousebtn[0]; // right
 assign dataMs[27] = 1'b1;
 assign MOUSEBTN = mousebtn; // PS/2 direct output for debugging
 
