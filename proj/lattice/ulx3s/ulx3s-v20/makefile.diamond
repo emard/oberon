@@ -45,9 +45,9 @@ VERILOG_FILES = \
   ../../../../hdl/FPMultiplier.v \
   ../../../../hdl/VID.OStation.v \
   ../../../../hdl/lattice/bram32bit.v \
+  ../../../../hdl/bram_true2p_2clk.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/lattice/ecp5pll.sv \
-  ../../../../hdl/bram_true2p_2clk.v \
 
 #  ../../../../hdl/bram32bit.v \ # works
 #  ../../../../hdl/lattice/bram32bit.v \ # works
