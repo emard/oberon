@@ -46,12 +46,15 @@ Oberon.
     Device     Boot   Start      End  Sectors  Size Id Type
     /dev/sda1          2048   524287   522240  255M  b W95 FAT32
     /dev/sda2        655360  1179647   524288  256M 83 Linux
-    /dev/sda3        524288   655359   131072   64M df BootIt <-- Oberon
+    /dev/sda3        524290   655359   131072   64M df BootIt <-- Oberon
     /dev/sda4       1179648 15564799 14385152  6,9G  5 Extended
     /dev/sda5       1181696  3278847  2097152    1G 83 Linux
     /dev/sda6       3280896  3805183   524288  256M 82 Linux swap / Solaris
 
     Partition table entries are not in disk order.
+
+    hexdump -C /dev/sda3
+    00000000  8d a3 1e 9b 03 00 00 00  91 1d 00 00 00 00 00 00  |................|
 
 
 # Latest development
