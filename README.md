@@ -81,6 +81,26 @@ and direct ESP32 SD offset
 
     lftp> put Oberon-2019-01-21.dsk -o /sd@268436480
 
+# Quick GUI info
+
+Oberon has no folders. All files are in root.
+On right bottom window, move cursor down.
+Press left click and cursor like slanted "1" will appear.
+To compile "Sierpinski" example, on empty line type
+
+    ORP.Compile Sierpinski.Mod
+
+Middle click on "ORP.Compile" and on upper right window
+compile message will appear.
+
+Then Middle click on "Sierpinski.Draw" to run example, some
+pattern will be drawn on big left window.
+
+With Right drag you can select for example "*.Mod"
+and then Middle-click on "System.Directory", list of sources
+will appear. Right drag on "Sierpinski.Mod" and Middle click
+on "Edit.Open" to edit the file. Middle click to "Edit.Store"
+to save it.
 
 # Latest development
 
