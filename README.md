@@ -93,7 +93,7 @@ To compile "Sierpinski" example, on empty line type
 
     ORP.Compile Sierpinski.Mod
 
-Middle click on "ORP.Compile" and on upper right window
+Middle click on "ORP.Compile". On upper right window
 compile message will appear.
 
 Then Middle click on "Sierpinski.Draw" to run example, some
