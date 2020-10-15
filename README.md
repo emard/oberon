@@ -60,9 +60,11 @@ Oberon.
     hexdump -C /dev/sda3
     00000000  8d a3 1e 9b 03 00 00 00  91 1d 00 00 00 00 00 00  |................|
 
-Here are [schierlm disk images](https://github.com/schierlm/oberon-risc-emu-enhanced)
-[schierlm modifications releases](https://github.com/schierlm/Oberon2013Modifications)
-which can be dumped directly to partition 3 as created above:
+Here are some disk image example [schierlm images with Hilbert etc examples
+already compiled](https://github.com/schierlm/oberon-risc-emu-enhanced)
+[schierlm modifications releases, no Hilbert examples here](https://github.com/schierlm/Oberon2013Modifications)
+
+Such images can be dumped directly to partition 3 as created above:
 
     dd if=Oberon-2019-01-21.dsk of=/dev/sda3
 
