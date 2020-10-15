@@ -47,13 +47,15 @@ module ulx3s_v20(
 
 	assign usb_fpga_pu_dp = 1'b1; 	// pull USB D+ to +3.3V through 1.5K resistor
 	assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3V through 1.5K resistor
-	
+
+        // if picture "rolls" (sync problem), try another pixel clock
+	parameter pixel_clock_MHz = 65; // 65 for 12F, 75 for 85F
 	wire [3:0] clocks_video;
         ecp5pll
         #(
-            .in_hz( 25*1000000),
-          .out0_hz(325*1000000),
-          .out1_hz( 65*1000000)
+            .in_hz(               25*1000000),
+          .out0_hz(5*pixel_clock_MHz*1000000),
+          .out1_hz(  pixel_clock_MHz*1000000)
         )
         ecp5pll_video_inst
         (
@@ -61,8 +63,8 @@ module ulx3s_v20(
           .clk_o(clocks_video)
         );
         wire clk_pixel, clk_shift;
-        assign clk_shift = clocks_video[0]; // 325 MHz
-        assign clk_pixel = clocks_video[1]; //  65 MHz
+        assign clk_shift = clocks_video[0]; // 325 or 375 MHz
+        assign clk_pixel = clocks_video[1]; //  65 or  75 MHz
 
 	wire [3:0] clocks_system;
 	wire pll_locked;
@@ -111,13 +113,13 @@ module ulx3s_v20(
 		.VGA_G(vga_g),
 		.VGA_B(vga_b),
 
-		//.PS2CLKA(gp[11]),      // ESP32 keyboard clock wifi_gpio26
-		//.PS2DATA(gn[11]),      // ESP32 keyboard data wifi_gpio25
+		.PS2CLKA(gp[11]),      // ESP32 keyboard clock wifi_gpio26
+		.PS2DATA(gn[11]),      // ESP32 keyboard data wifi_gpio25
 		//.PS2CLKB(wifi_gpio17), // ESP32 mouse clock
 		//.PS2DATB(wifi_gpio16), // ESP32 mouse data
 
-		.PS2CLKA(gp[21]), // keyboard clock US3, flat cable on pins down
-		.PS2DATA(gn[21]), // keyboard data US3, flat cable on pins down
+		//.PS2CLKA(gp[21]), // keyboard clock US3, flat cable on pins down
+		//.PS2DATA(gn[21]), // keyboard data US3, flat cable on pins down
 		.PS2CLKB(usb_fpga_dp), // mouse clock US2
 		.PS2DATB(usb_fpga_dn), // mouse data US2
 

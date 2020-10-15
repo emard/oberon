@@ -3,6 +3,10 @@ PROJECT = oberon
 BOARD = ulx3s
 # 12 25 45 85
 FPGA_SIZE = 12
+# if picture "rolls", change pixel_clock_MHz near line 52 in ../../../../hdl/top/ulx3s_v20_top.v
+# FPGA_SIZE=12 -> pixel_clock_MHz=65
+# FPGA_SIZE=85 -> pixel_clock_MHz=75
+
 FPGA_PACKAGE = CABGA381
 
 # ******* if programming with OpenOCD *******
