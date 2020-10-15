@@ -32,6 +32,28 @@ if that sector table limit were removed. It is safe for now to expect Oberon
 to only use 67 MB of disk space... nobody has removed that limit yet in RISC
 Oberon.
 
+    fdisk /dev/sda
+
+    Command (m for help): p
+    Disk /dev/sda: 7,42 GiB, 7969177600 bytes, 15564800 sectors
+    Disk model: SD/MMC          
+    Units: sectors of 1 * 512 = 512 bytes
+    Sector size (logical/physical): 512 bytes / 512 bytes
+    I/O size (minimum/optimal): 512 bytes / 512 bytes
+    Disklabel type: dos
+    Disk identifier: 0x00000000
+
+    Device     Boot   Start      End  Sectors  Size Id Type
+    /dev/sda1          2048   524287   522240  255M  b W95 FAT32
+    /dev/sda2        655360  1179647   524288  256M 83 Linux
+    /dev/sda3        524288   655359   131072   64M df BootIt <-- Oberon
+    /dev/sda4       1179648 15564799 14385152  6,9G  5 Extended
+    /dev/sda5       1181696  3278847  2097152    1G 83 Linux
+    /dev/sda6       3280896  3805183   524288  256M 82 Linux swap / Solaris
+
+    Partition table entries are not in disk order.
+
+
 # Latest development
 
 Oberon is currently actively developed at
