@@ -19,18 +19,21 @@ there and making new filesystem(s).
 
 # Disk partition
 
-Oberon expects it's "partition" to start at 512-byte sector number 524288,
-which is byte offset 268435456. Oberon won't touch the first two 512-byte
-sectors of it's own partition so it's become a convention in some Oberon
-emulators to leave off the first 268436480 bytes , resulting in a shortened
-disk image. You can tell you are working with a shortened Oberon disk image
+Oberon expects it's "partition" to start at 512-byte sector number 524288 =
+512*1024, which is byte offset 268435456 = 512*512*1024. Oberon won't touch the first
+two 512-byte sectors of it's own partition and start from sector number
+524290 = 512*1024+2 so it's become a convention in some Oberon
+emulators to leave off the first 268436480 = 512*512*1024 + 2*512 bytes,
+resulting in a shortened disk image.
+
+You can tell you are working with a shortened Oberon disk image
 if it starts with 8d a3 1e 9b which is the on-disk representation of the
 directory sector mark, 0x9b1ea38d. The current RISC Oberon kernel will only
-address 67108864 (67MB) of on-disk storage due to an internal sector table
-limit, although the on-disk structures should allow a volume size of 141 GB
-if that sector table limit were removed. It is safe for now to expect Oberon
-to only use 67 MB of disk space... nobody has removed that limit yet in RISC
-Oberon. Here are [schierlm disk images](https://github.com/schierlm/oberon-risc-emu-enhanced)
+address 67108864 (64MB) = 64*1024*1024 of on-disk storage due to an internal
+sector table limit, although the on-disk structures should allow a volume size
+of 141 GB if that sector table limit were removed. It is safe for now to expect Oberon
+to only use 64 MB of disk space... nobody has removed that limit yet in RISC
+Oberon.
 
 
     fdisk /dev/sda
@@ -56,6 +59,20 @@ Oberon. Here are [schierlm disk images](https://github.com/schierlm/oberon-risc-
 
     hexdump -C /dev/sda3
     00000000  8d a3 1e 9b 03 00 00 00  91 1d 00 00 00 00 00 00  |................|
+
+Here are [schierlm disk images](https://github.com/schierlm/oberon-risc-emu-enhanced)
+which can be dumped directly to partition 3 as created above:
+
+    dd if=Oberon-2019-01-21.dsk of=/dev/sda3
+
+or using ESP32 uftpd.py form [esp32ecp5](https://github.com/emard/esp32ecp5)
+and direct ESP32 SD offset
+
+    ftp> put Oberon-2019-01-21.dsk sd@268436480
+
+    or
+
+    lftp> put Oberon-2019-01-21.dsk -o /sd@268436480
 
 
 # Latest development
