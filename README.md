@@ -77,7 +77,7 @@ and direct ESP32 SD offset
 
     ftp> put Oberon-2019-01-21.dsk sd@268436480
 
-    or
+or
 
     lftp> put Oberon-2019-01-21.dsk -o /sd@268436480
 
