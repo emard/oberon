@@ -84,6 +84,9 @@ and direct ESP32 SD offset
 # Quick GUI info
 
 Oberon has no folders. All files are in root.
+If any text on the GUI is Middle clicked, it will
+executed as if this command has been typed to commandline.
+
 On right bottom window, move cursor down.
 Press left click and cursor like slanted "1" will appear.
 To compile "Sierpinski" example, on empty line type
