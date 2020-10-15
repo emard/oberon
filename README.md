@@ -30,7 +30,8 @@ address 67108864 (67MB) of on-disk storage due to an internal sector table
 limit, although the on-disk structures should allow a volume size of 141 GB
 if that sector table limit were removed. It is safe for now to expect Oberon
 to only use 67 MB of disk space... nobody has removed that limit yet in RISC
-Oberon.
+Oberon. Here are [schierlm disk images](https://github.com/schierlm/oberon-risc-emu-enhanced)
+
 
     fdisk /dev/sda
 
