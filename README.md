@@ -108,5 +108,7 @@ to save it.
 # Latest development
 
 Oberon is currently actively developed at
-[Oberon-experimental](https://github.com/andreaspirklbauer/Oberon-experimental).
+[Oberon-experimental](https://github.com/andreaspirklbauer/Oberon-experimental)
 
+Memory configuration
+[Oberon-memory](https://github.com/io-core/technotes/blob/main/technote002.md)
