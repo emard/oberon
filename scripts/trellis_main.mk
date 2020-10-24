@@ -28,8 +28,8 @@ VHDL_FILES ?=
 # open source synthesis tools
 TRELLISDB ?= $(TRELLIS)/database
 LIBTRELLIS ?= $(TRELLIS)/libtrellis
-ECPPLL ?= LANG=C LD_LIBRARY_PATH=$(LIBTRELLIS) $(TRELLIS)/libtrellis/ecppll
-ECPPACK ?= LANG=C LD_LIBRARY_PATH=$(LIBTRELLIS) $(TRELLIS)/libtrellis/ecppack --db $(TRELLISDB)
+ECPPLL ?= LANG=C ecppll # LANG=C LD_LIBRARY_PATH=$(LIBTRELLIS) $(TRELLIS)/libtrellis/ecppll
+ECPPACK ?= LANG=C ecppack # LANG=C LD_LIBRARY_PATH=$(LIBTRELLIS) $(TRELLIS)/libtrellis/ecppack --db $(TRELLISDB)
 BIT2SVF ?= $(TRELLIS)/tools/bit_to_svf.py
 #BASECFG ?= $(TRELLIS)/misc/basecfgs/empty_$(FPGA_CHIP_EQUIVALENT).config
 # yosys options, sometimes those can be used: -noccu2 -nomux -nodram
@@ -50,13 +50,13 @@ ifeq ($(FPGA_CHIP), lfe5u-85f)
   CHIP_ID=0x41113043
 endif
 
-ifeq ($(FPGA_SIZE), 12)
-  FPGA_K=$(FPGA_PREFIX)25
-  IDCODE_CHIPID=--idcode $(CHIP_ID)
-else
+#ifeq ($(FPGA_SIZE), 12)
+#  FPGA_K=$(FPGA_PREFIX)25
+#  IDCODE_CHIPID=--idcode $(CHIP_ID)
+#else
   FPGA_K=$(FPGA_PREFIX)$(FPGA_SIZE)
   IDCODE_CHIPID=
-endif
+#endif
 
 FPGA_CHIP_EQUIVALENT ?= lfe5u-$(FPGA_K)f
 
@@ -84,11 +84,13 @@ ifneq ($(wildcard $(DIAMOND_BASE)),)
 endif
 
 # programming tools
-TINYFPGASP ?= tinyfpgasp
+UJPROG ?= fujprog
+OPENFPGALOADER ?= openFPGALoader
+OPENFPGALOADER_OPTIONS ?= --board ulx3s
 FLEAFPGA_JTAG ?= FleaFPGA-JTAG 
 OPENOCD ?= openocd
 OPENOCD_INTERFACE ?= $(SCRIPTS)/ft231x.ocd
-UJPROG ?= ujprog
+TINYFPGASP ?= tinyfpgasp
 
 # helper scripts directory
 SCRIPTS ?= scripts
@@ -120,7 +122,7 @@ VHDL_TO_VERILOG_FILES = $(VHDL_FILES:.vhd=.v)
 
 $(PROJECT).json: $(VERILOG_FILES) $(VHDL_TO_VERILOG_FILES)
 	$(YOSYS) \
-	-p "read -vlog2k $(VERILOG_FILES) $(VHDL_TO_VERILOG_FILES)" \
+	-p "read -sv $(VERILOG_FILES) $(VHDL_TO_VERILOG_FILES)" \
 	-p "hierarchy -top ${TOP_MODULE}" \
 	-p "synth_ecp5 ${YOSYS_OPTIONS} -json ${PROJECT}.json"
 
@@ -128,7 +130,7 @@ $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).config: $(PROJECT).json $(BASECFG)
 	$(NEXTPNR-ECP5) $(NEXTPNR_OPTIONS) --$(FPGA_K)k --package $(FPGA_PACKAGE) --json $(PROJECT).json --lpf $(CONSTRAINTS) --textcfg $@
 
 $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).bit: $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).config
-	$(ECPPACK) $(IDCODE_CHIPID) --compress --input $< --bit $@
+	$(ECPPACK) $(IDCODE_CHIPID) --compress --freq 62.0 --input $< --bit $@
 
 $(CLK0_FILE_NAME):
 	$(ECPPLL) $(CLK0_OPTIONS) --file $@
@@ -163,11 +165,17 @@ $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).vme: $(BOARD)_$(FPGA_SIZE)f.xcf $(BOARD)_$(FPG
 #	$(BIT2SVF) $< $@
 
 $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).svf: $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).config
-	$(ECPPACK) $(IDCODE_CHIPID) $< --freq 62.0 --svf-rowsize 800000 --svf $@
+	$(ECPPACK) $(IDCODE_CHIPID) $< --compress --freq 62.0 --svf-rowsize 800000 --svf $@
 
 # program SRAM  with ujrprog (temporary)
+prog: program
 program: $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).bit
 	$(UJPROG) $<
+
+# program SRAM with OPENFPGALOADER
+prog_ofl: program_ofl
+program_ofl: $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).bit
+	$(OPENFPGALOADER) $(OPENFPGALOADER_OPTIONS) $<
 
 # program SRAM  with FleaFPGA-JTAG (temporary)
 program_flea: $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).vme
@@ -182,10 +190,11 @@ flash_tiny: $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).bit
 	$(TINYFPGASP) -w $<
 
 # generate chip-specific openocd programming file
-$(BOARD)_$(FPGA_SIZE)f.ocd: makefile $(SCRIPTS)/ecp5-ocd.sh
+$(BOARD)_$(FPGA_SIZE)f.ocd: $(SCRIPTS)/ecp5-ocd.sh
 	$(SCRIPTS)/ecp5-ocd.sh $(CHIP_ID) $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).svf > $@
 
 # program SRAM with OPENOCD
+prog_ocd: program_ocd
 program_ocd: $(BOARD)_$(FPGA_SIZE)f_$(PROJECT).svf $(BOARD)_$(FPGA_SIZE)f.ocd
 	$(OPENOCD) --file=$(OPENOCD_INTERFACE) --file=$(BOARD)_$(FPGA_SIZE)f.ocd
 
