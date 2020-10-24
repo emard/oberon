@@ -1,3 +1,4 @@
+`default_nettype none
 module ulx3s_v20(
 //      -- System clock and reset
 	input clk_25mhz, // main clock input from external clock source
@@ -49,7 +50,7 @@ module ulx3s_v20(
 	assign usb_fpga_pu_dn = 1'b1; 	// pull USB D- to +3.3V through 1.5K resistor
 
         // if picture "rolls" (sync problem), try another pixel clock
-	parameter pixel_clock_MHz = 65; // 65 for 12F, 75 for 85F
+	parameter pixel_clock_MHz = 75; // 65 for 12F, 75 for 85F
 	wire [3:0] clocks_video;
         ecp5pll
         #(
@@ -169,23 +170,96 @@ module ulx3s_v20(
     assign vga_b = vga_b8[7:6];
 */
 
+    // OSD overlay
+    localparam C_display_bits = 64;
+    wire [C_display_bits-1:0] OSD_display = 64'hC01DCAFE600DBABE;
+
+    // oberon video signal from oberon, expanded to 8-bit
+    wire [7:0] vga_r8 = {vga_r,{6{vga_r[0]}}};
+    wire [7:0] vga_g8 = {vga_g,{6{vga_g[0]}}}; 
+    wire [7:0] vga_b8 = {vga_b,{6{vga_b[0]}}};
+    
+    // OSD HEX signal
+    parameter C_color_bits = 16; 
+    wire [9:0] osd_x;
+    wire [9:0] osd_y;
+    // for reverse screen:
+    wire [9:0] osd_rx = 2*6/4*C_display_bits-osd_x;
+    wire [C_color_bits-1:0] color;
+    hex_decoder
+    #(
+      .c_data_len(C_display_bits),
+      .c_row_bits(5), // 2**n digits per row (4*2**n bits/row) 3->32, 4->64, 5->128, 6->256 
+      .c_grid_6x8(1), // NOTE: TRELLIS needs -abc9 option to compile
+      .c_font_file("hex_font.mem"),
+      .c_x_bits(8),
+      .c_y_bits(4),
+      .c_color_bits(C_color_bits)
+    )
+    hex_decoder_inst
+    (
+      .clk(clk_pixel),
+      .data(OSD_display),
+      .x(osd_rx[8:1]),
+      .y(osd_y[4:1]),
+      .color(color)
+    );
+    // rgb565->rgb888
+    wire [7:0] osd_r = {color[15:11],{3{color[11]}}};
+    wire [7:0] osd_g = {color[10:5],{3{color[5]}}};
+    wire [7:0] osd_b = {color[4:0],{3{color[0]}}};
+
+    // mix oberon video and HEX
+    wire [7:0] osd_vga_r, osd_vga_g, osd_vga_b;
+    wire osd_vga_hsync, osd_vga_vsync, osd_vga_blank;
+    osd
+    #(
+      .C_x_start(128),
+      .C_x_stop (128+2*6/4*C_display_bits+2),
+      .C_y_start(128),
+      .C_y_stop (128+2*8-1)
+    )
+    osd_instance
+    (
+      .clk_pixel(clk_pixel),
+      .clk_pixel_ena(1'b1),
+      .i_r(vga_r8),
+      .i_g(vga_g8),
+      .i_b(vga_b8),
+      .i_hsync(~vga_hsync),
+      .i_vsync(vga_vsync),
+      .i_blank(vga_blank),
+      .i_osd_en(1'b1), // btn[1] can be used here
+      .o_osd_x(osd_x),
+      .o_osd_y(osd_y),
+      .i_osd_r(osd_r),
+      .i_osd_g(osd_g),
+      .i_osd_b(osd_b),
+      .o_r(osd_vga_r),
+      .o_g(osd_vga_g),
+      .o_b(osd_vga_b),
+      .o_hsync(osd_vga_hsync),
+      .o_vsync(osd_vga_vsync),
+      .o_blank(osd_vga_blank)
+    );
+
     // VGA to digital video converter
     wire [1:0] tmds[3:0];
     vga2dvid
     #(
       .C_ddr(1'b1),
-      .C_depth(2)
+      .C_depth(8)
     )
     vga2dvid_instance
     (
       .clk_pixel(clk_pixel),
       .clk_shift(clk_shift),
-      .in_red(vga_r),
-      .in_green(vga_g),
-      .in_blue(vga_b),
-      .in_hsync(vga_hsync),
-      .in_vsync(vga_vsync),
-      .in_blank(vga_blank),
+      .in_red(osd_vga_r),
+      .in_green(osd_vga_g),
+      .in_blue(osd_vga_b),
+      .in_hsync(osd_vga_hsync),
+      .in_vsync(osd_vga_vsync),
+      .in_blank(osd_vga_blank),
       .out_clock(tmds[3]),
       .out_red(tmds[2]),
       .out_green(tmds[1]),
