@@ -6,7 +6,7 @@ import ecp5
 os.mount(SDCard(slot=3),"/sd")
 # load bitstream but don't start it while SD is mounted (close=False)
 fpga_size = { 0x21111043:12, 0x41111043:25, 0x41112043:45, 0x41113043:85 }
-ecp5.prog("/sd/oberon/ulx3s_%df_oberon_ps2mouse_esp32ps2kbdrecv.bit.gz" % fpga_size[ecp5.idcode()],close=False)
+ecp5.prog("/sd/oberon/ulx3s_%df_oberon_ps2mouse_esp32ps2kbdrecv.bit" % fpga_size[ecp5.idcode()],close=False)
 os.umount("/sd")
 # release all SD pins to HI-Z
 p12=Pin(12,Pin.IN)
