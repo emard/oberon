@@ -172,19 +172,30 @@ module ulx3s_v20(
 
     // OSD overlay
     localparam C_display_bits = 64;
-    wire [C_display_bits-1:0] OSD_display = 64'hC01DCAFE600DBABE;
+    reg [C_display_bits-1:0] OSD_display = 64'hC01DCAFE600DBABE;
+    always @(posedge clk_pixel)
+    begin
+      if(vga_vsync)
+      begin
+        OSD_display[63:56] <= led;
+        OSD_display[31:16] <= sdram_a;
+        OSD_display[15:0]  <= sdram_d;
+      end
+    end
 
-    // oberon video signal from oberon, expanded to 8-bit
+    // oberon video signal from oberon, rgb222->rgb888
     wire [7:0] vga_r8 = {vga_r,{6{vga_r[0]}}};
-    wire [7:0] vga_g8 = {vga_g,{6{vga_g[0]}}}; 
+    wire [7:0] vga_g8 = {vga_g,{6{vga_g[0]}}};
     wire [7:0] vga_b8 = {vga_b,{6{vga_b[0]}}};
-    
+
     // OSD HEX signal
-    parameter C_color_bits = 16; 
+    localparam C_HEX_width  = 6*4*(C_display_bits/4);
+    localparam C_HEX_height = 8*4;
+    localparam C_color_bits = 16;
     wire [9:0] osd_x;
     wire [9:0] osd_y;
     // for reverse screen:
-    wire [9:0] osd_rx = 2*6/4*C_display_bits-osd_x;
+    wire [9:0] osd_rx = C_HEX_width-2-osd_x;
     wire [C_color_bits-1:0] color;
     hex_decoder
     #(
@@ -200,8 +211,8 @@ module ulx3s_v20(
     (
       .clk(clk_pixel),
       .data(OSD_display),
-      .x(osd_rx[8:1]),
-      .y(osd_y[4:1]),
+      .x(osd_rx[9:2]),
+      .y(osd_y[5:2]),
       .color(color)
     );
     // rgb565->rgb888
@@ -214,10 +225,10 @@ module ulx3s_v20(
     wire osd_vga_hsync, osd_vga_vsync, osd_vga_blank;
     osd
     #(
-      .C_x_start(128),
-      .C_x_stop (128+2*6/4*C_display_bits+2),
-      .C_y_start(128),
-      .C_y_stop (128+2*8-1)
+      .C_x_start(96),
+      .C_x_stop (96+C_HEX_width+2),
+      .C_y_start(96),
+      .C_y_stop (96+C_HEX_height-1)
     )
     osd_instance
     (
@@ -229,7 +240,7 @@ module ulx3s_v20(
       .i_hsync(~vga_hsync),
       .i_vsync(vga_vsync),
       .i_blank(vga_blank),
-      .i_osd_en(1'b1), // btn[1] can be used here
+      .i_osd_en(btn[1]), // hold btn[1] to see HEX OSD
       .o_osd_x(osd_x),
       .o_osd_y(osd_y),
       .i_osd_r(osd_r),
