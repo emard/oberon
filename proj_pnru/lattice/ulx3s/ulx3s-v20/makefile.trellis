@@ -1,0 +1,74 @@
+# ******* project, board and chip name *******
+PROJECT = oberon
+BOARD = ulx3s
+# 12 25 45 85
+FPGA_SIZE = 85
+# if picture "rolls", change pixel_clock_MHz near line 52 in ../../../../hdl/top/ulx3s_v20_top.v
+# FPGA_SIZE=12 -> pixel_clock_MHz=65
+# FPGA_SIZE=85 -> pixel_clock_MHz=75
+
+FPGA_PACKAGE = CABGA381
+
+# ******* if programming with OpenOCD *******
+# using local latest openocd until in linux distribution
+OPENOCD=openocd_ft232r
+# default onboard usb-jtag
+OPENOCD_INTERFACE=$(SCRIPTS)/ft231x.ocd
+# ulx3s-jtag-passthru
+#OPENOCD_INTERFACE=$(SCRIPTS)/ft231x2.ocd
+# ulx2s
+#OPENOCD_INTERFACE=$(SCRIPTS)/ft232r.ocd
+# external jtag
+#OPENOCD_INTERFACE=$(SCRIPTS)/ft2232.ocd
+
+# ******* design files *******
+#CONSTRAINTS = ../../../../constraints/ulx3s_v20.lpf
+CONSTRAINTS = ../../../../hdl/pnru/ulx3s_v20.lpf
+TOP_MODULE = Ulx3s_Top
+TOP_MODULE_FILE = ../../../../hdl/pnru_mix/$(TOP_MODULE).v
+
+
+VERILOG_FILES = \
+  $(TOP_MODULE_FILE) \
+../../../../hdl/pnru/MouseM.v \
+../../../../hdl/pnru/FPAdder.v \
+../../../../hdl/pnru/FPDivider.v \
+../../../../hdl/pnru/cache.v \
+../../../../hdl/pnru/pll.v \
+../../../../hdl/pnru/FPMultiplier.v \
+../../../../hdl/pnru/risc5.v \
+../../../../hdl/pnru/RS232R.v \
+../../../../hdl/pnru/Divider.v \
+../../../../hdl/pnru/Multiplier.v \
+../../../../hdl/pnru/sdram.v \
+../../../../hdl/pnru/SPI.v \
+../../../../hdl/pnru/PS2.v \
+../../../../hdl/pnru/RS232T.v \
+../../../../hdl/pnru/ram.v \
+../../../../hdl/pnru/PROM.v \
+../../../../hdl/pnru/dvid.v \
+../../../../hdl/pnru/video.v \
+../../../../hdl/lattice/ifs1p3bx.v \
+../../../../hdl/lattice/ecp5pll.sv \
+../../../../hdl/hex/hex_decoder.v \
+../../../../hdl/hex/osd.v \
+
+# ../../../../hdl/pnru/ulx3s_v20.lpf
+# ../../../../hdl/pnru/Ulx3s_Top.v
+# ../../../../hdl/pnru/prom_old.mem
+# ../../../../hdl/pnru/prom.mem
+# ../../../../hdl/pnru/ob_tb.v \
+
+VHDL_FILES = \
+  ../../../../hdl/dvi/vga.vhd \
+  ../../../../hdl/dvi/vga2dvid.vhd \
+  ../../../../hdl/dvi/tmds_encoder.vhd \
+
+# synthesis options
+YOSYS_OPTIONS = -abc9
+NEXTPNR_OPTIONS = --timing-allow-fail
+
+SCRIPTS = ../../../../scripts
+include $(SCRIPTS)/diamond_path.mk
+include $(SCRIPTS)/trellis_path.mk
+include $(SCRIPTS)/trellis_main.mk
