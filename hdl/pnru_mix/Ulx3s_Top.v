@@ -401,12 +401,12 @@ module Ulx3s_Top (
     if(vs)
     begin
       // first OSD row
-      OSD_display[63:56] <= led;
-      //OSD_display[31:16] <= sdram_a; // refused routing to IFS
-      OSD_display[19:0]  <= adr; // refused routing to IFS
+      OSD_display[ 63:56] <= led;    // LED status in HEX
+      OSD_display[ 35:32] <= wmask;  // CPU byte write select
+      OSD_display[ 19:0 ] <= adr;    // CPU address
       // second OSD row
-      OSD_display[127:96] <= outbus; // CPU writes
-      OSD_display[ 95:64] <= inbus0; // CPU reads
+      OSD_display[127:96] <= outbus; // CPU write data
+      OSD_display[ 95:64] <= inbus0; // CPU read data
     end
   end
 
