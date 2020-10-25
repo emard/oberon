@@ -39,7 +39,7 @@ module Ulx3s_Top (
   output  [3:0] gpdi_dp         // DVID Video
 );
 
-  wire clk = clk_25mhz;
+  wire clk;
 
   // ULX3S specific things
   //
@@ -49,7 +49,7 @@ module Ulx3s_Top (
   assign usb_fpga_pu_dn = 1'b1; 	  // US1 D- pull as above
   assign gp[22]         = 1'b1;     // US3 D+ pull as above
   assign gn[22]         = 1'b1;     // US3 D- pull as above
-  assign sd_d[2:1]      = 2'bzz;    // force inout to input
+  assign sd_d[2:1]      = 2'b11;    // force inout to input
 
 `ifdef __ICARUS__
   reg sdrclk = 0;
@@ -59,7 +59,6 @@ module Ulx3s_Top (
   reg pix5clk = 0;
   always #308 pix5clk = !pix5clk;
 `else
-  wire sdrclk, pixclk, pix5clk;
   /*
   PLL pll(
     .clkin(clk_25mhz),
@@ -72,14 +71,17 @@ module Ulx3s_Top (
   wire [3:0] clocks_sdram, clocks_video;
   ecp5pll
   #(
-      .in_hz(               25*1000000),
-    .out0_hz(              125*1000000)
+      .in_hz( 25*1000000),
+    .out0_hz(125*1000000),
+    .out1_hz( 25*1000000)
   )
   ecp5pll_sdram_inst
   (
     .clk_i(clk_25mhz),
     .clk_o(clocks_sdram)
   );
+  wire sdrclk  = clocks_sdram[0];
+  wire clk     = clocks_sdram[1];
 
   ecp5pll
   #(
@@ -92,9 +94,8 @@ module Ulx3s_Top (
     .clk_i(clk_25mhz),
     .clk_o(clocks_video)
   );
-  assign sdrclk  = clocks_sdram[0];
-  assign pixclk  = clocks_video[0];
-  assign pix5clk = clocks_video[1];
+  wire pixclk  = clocks_video[0];
+  wire pix5clk = clocks_video[1];
 `endif
 
   // System timer (@ I/O addr 0) and reset
@@ -108,7 +109,8 @@ module Ulx3s_Top (
     cnt0 <= limit ? 0 : cnt0 + 1;
     cnt1 <= cnt1 + limit;
     //rst     <= ((cnt1[4:0] == 0) & limit) ? ~(btns[3]) : rst;
-    rst  <= (cnt0 > 100) | rst;
+    //rst  <= (cnt0 > 100) | rst;
+    rst  <= cnt0 == 10000 ? btn[0] : rst;
   end
 
   // CPU
@@ -371,6 +373,7 @@ module Ulx3s_Top (
     .sd_clk(sdram_clk)
   );
 
+
   // Video circuit: XGA over DVID
   //
   wire hs, vs, rgb, vde;
@@ -393,7 +396,6 @@ module Ulx3s_Top (
   // OSD overlay
   localparam C_display_bits = 64;
   reg [C_display_bits-1:0] OSD_display = 64'hC01DCAFE600DBABE;
-  /*
   always @(posedge pixclk)
   begin
     if(vs)
@@ -403,10 +405,9 @@ module Ulx3s_Top (
       //OSD_display[15:0]  <= sdram_d; // refused routing to IFS
     end
   end
-  */
 
   // OSD HEX signal
-  localparam C_HEX_width  = 6*4*(C_display_bits/4);
+  localparam C_HEX_width  = 8*4*(C_display_bits/4);
   localparam C_HEX_height = 8*4;
   localparam C_color_bits = 16;
   wire [9:0] osd_x;
@@ -418,7 +419,7 @@ module Ulx3s_Top (
   #(
     .c_data_len(C_display_bits),
     .c_row_bits(5), // 2**n digits per row (4*2**n bits/row) 3->32, 4->64, 5->128, 6->256 
-    .c_grid_6x8(1), // NOTE: TRELLIS needs -abc9 option to compile
+    .c_grid_6x8(0), // NOTE: TRELLIS needs -abc9 option to compile
     .c_font_file("hex_font.mem"),
     .c_x_bits(8),
     .c_y_bits(4),
@@ -474,9 +475,12 @@ module Ulx3s_Top (
   DVID tdms (
     .pixclk(pixclk),
     .pixclk_x5(pix5clk),
-    
+
+    // oberon wideo mixed with OSD
     .red(osd_vga_r), .green(osd_vga_g), .blue(osd_vga_b),
     .vde(~osd_vga_blank), .hSync(osd_vga_hsync), .vSync(osd_vga_vsync),
+
+    // oberon video only, no OSD
     //.red(vid), .green(vid), .blue(vid),
     //.vde(vde), .hSync(hs), .vSync(vs),
     
