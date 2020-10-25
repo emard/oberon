@@ -394,21 +394,25 @@ module Ulx3s_Top (
   );
 
   // OSD overlay
-  localparam C_display_bits = 64;
+  localparam C_display_bits = 128;
   reg [C_display_bits-1:0] OSD_display = 64'hC01DCAFE600DBABE;
   always @(posedge pixclk)
   begin
     if(vs)
     begin
+      // first OSD row
       OSD_display[63:56] <= led;
       //OSD_display[31:16] <= sdram_a; // refused routing to IFS
-      //OSD_display[15:0]  <= sdram_d; // refused routing to IFS
+      OSD_display[19:0]  <= adr; // refused routing to IFS
+      // second OSD row
+      OSD_display[127:96] <= inbus0;
+      OSD_display[ 95:64] <= outbus;
     end
   end
 
   // OSD HEX signal
-  localparam C_HEX_width  = 8*4*(C_display_bits/4);
-  localparam C_HEX_height = 8*4;
+  localparam C_HEX_width  = 8*4*(C_display_bits/2/4);
+  localparam C_HEX_height = 8*4*2;
   localparam C_color_bits = 16;
   wire [9:0] osd_x;
   wire [9:0] osd_y;
@@ -418,7 +422,7 @@ module Ulx3s_Top (
   hex_decoder
   #(
     .c_data_len(C_display_bits),
-    .c_row_bits(5), // 2**n digits per row (4*2**n bits/row) 3->32, 4->64, 5->128, 6->256 
+    .c_row_bits(4), // 2**n digits per row (4*2**n bits/row) 3->32, 4->64, 5->128, 6->256 
     .c_grid_6x8(0), // NOTE: TRELLIS needs -abc9 option to compile
     .c_font_file("hex_font.mem"),
     .c_x_bits(8),
