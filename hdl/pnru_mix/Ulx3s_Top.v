@@ -405,8 +405,8 @@ module Ulx3s_Top (
       //OSD_display[31:16] <= sdram_a; // refused routing to IFS
       OSD_display[19:0]  <= adr; // refused routing to IFS
       // second OSD row
-      OSD_display[127:96] <= inbus0;
-      OSD_display[ 95:64] <= outbus;
+      OSD_display[127:96] <= outbus; // CPU writes
+      OSD_display[ 95:64] <= inbus0; // CPU reads
     end
   end
 
