@@ -42,11 +42,11 @@ module Ulx3s_Top (
   //
   assign wifi_gpio0     = btn[0];   // disable ESP32 monitor
   assign wifi_en        = 1'b0;     // disable ESP32
-  assign usb_fpga_pu_dp = 1'b1; 	  // US1 D+ pull to +3.3V through 1.5K resistor
-  assign usb_fpga_pu_dn = 1'b1; 	  // US1 D- pull as above
+  assign usb_fpga_pu_dp = 1'b1;     // US2 D+ pull to +3.3V through 1.5K resistor
+  assign usb_fpga_pu_dn = 1'b1;     // US2 D- pull as above
   assign gp[22]         = 1'b1;     // US3 D+ pull as above
   assign gn[22]         = 1'b1;     // US3 D- pull as above
-  assign sd_d[2:1]      = 2'b11;    // force inout to input
+  assign sd_d[2:1]      = 2'b11;    // force sd_dat[1,2] to high
 
 `ifdef __ICARUS__
   reg clk = 0;
@@ -134,7 +134,7 @@ module Ulx3s_Top (
 
   always @(posedge clk) begin
     if (wr & ioenb & (iowadr == 1)) Lreg <= outbus[7:0];
-    if (wr & ioenb & (iowadr == 1)) $display("leds=%h", outbus);
+    //if (wr & ioenb & (iowadr == 1)) $display("leds=%h", outbus);
     if (~rst)                       Lreg <= 0;
   end
   
