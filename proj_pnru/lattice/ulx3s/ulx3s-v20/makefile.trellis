@@ -53,6 +53,11 @@ VERILOG_FILES = \
 ../../../../hdl/hex/hex_decoder.v \
 ../../../../hdl/hex/osd.v \
 
+# pnru has extracted
+# https://gitlab.com/pnru/ulx3s-misc/-/blob/master/oberonstation/oberon_251020.tgz
+# sdram.v needs lowercase IFS1P3BX -> ifs1p3bx
+# until yosys bug is fixed
+
 # ../../../../hdl/pnru/ulx3s_v20.lpf
 # ../../../../hdl/pnru/Ulx3s_Top.v
 # ../../../../hdl/pnru/prom_old.mem
