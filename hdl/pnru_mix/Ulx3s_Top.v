@@ -38,9 +38,6 @@ module Ulx3s_Top (
   
   output  [3:0] gpdi_dp         // DVID Video
 );
-
-  wire clk;
-
   // ULX3S specific things
   //
   assign wifi_gpio0     = btn[0];   // disable ESP32 monitor
@@ -52,6 +49,8 @@ module Ulx3s_Top (
   assign sd_d[2:1]      = 2'b11;    // force inout to input
 
 `ifdef __ICARUS__
+  reg clk = 0;
+  always #100000 clk = !clk;
   reg sdrclk = 0;
   always #4000 sdrclk = !sdrclk;
   reg pixclk = 0;
@@ -59,16 +58,7 @@ module Ulx3s_Top (
   reg pix5clk = 0;
   always #308 pix5clk = !pix5clk;
 `else
-  /*
-  PLL pll(
-    .clkin(clk_25mhz),
-    .pll125(sdrclk),
-    .pll65(pixclk),
-    .pll325(pix5clk)
-  );
-  */
-  parameter pixel_clock_MHz = 65; // 65 for 12F, 75 for 85F
-  wire [3:0] clocks_sdram, clocks_video;
+  wire [3:0] clocks_sdram;
   ecp5pll
   #(
       .in_hz( 25*1000000),
@@ -83,6 +73,8 @@ module Ulx3s_Top (
   wire sdrclk  = clocks_sdram[0];
   wire clk     = clocks_sdram[1];
 
+  localparam pixel_clock_MHz = 65;
+  wire [3:0] clocks_video;
   ecp5pll
   #(
       .in_hz(               25*1000000),
@@ -139,7 +131,7 @@ module Ulx3s_Top (
   reg   [7:0] Lreg;
   wire  [3:0] btns = { ~btn[0], btn[3], btn[5], btn[4] };
   wire  [7:0] swi = 8'b0000_0000;
-  
+
   always @(posedge clk) begin
     if (wr & ioenb & (iowadr == 1)) Lreg <= outbus[7:0];
     if (wr & ioenb & (iowadr == 1)) $display("leds=%h", outbus);
@@ -401,7 +393,7 @@ module Ulx3s_Top (
     if(vs)
     begin
       // first OSD row
-      OSD_display[ 63:56] <= led;    // LED status in HEX
+      OSD_display[ 63:56] <= Lreg;   // LED register
       OSD_display[ 35:32] <= wmask;  // CPU byte write select
       OSD_display[ 19:0 ] <= adr;    // CPU address
       // second OSD row
@@ -439,7 +431,7 @@ module Ulx3s_Top (
   );
   // rgb565->rgb888
   wire [7:0] osd_r = {color[15:11],{3{color[11]}}};
-  wire [7:0] osd_g = {color[10:5],{3{color[5]}}};
+  wire [7:0] osd_g = {color[10:5],{2{color[5]}}};
   wire [7:0] osd_b = {color[4:0],{3{color[0]}}};
 
   // mix oberon video and HEX
