@@ -56,7 +56,7 @@ def mouse_nowheel_report(dx,dy,btn_left,btn_middle,btn_right):
 pygame.init()
 (width, height) = (320, 200)
 screen = pygame.display.set_mode((width, height))
-pygame.display.set_caption(u'Press ESC or PAUSE to quit')
+pygame.display.set_caption(u'Press PAUSE to quit')
 pygame.display.flip()
 pygame.event.set_grab(True)
 pygame.mouse.set_visible(False)
@@ -163,7 +163,7 @@ event2ps2 = {
 while(True):
   event = pygame.event.wait()
   if event.type == pygame.KEYDOWN:
-    if event.key == ESC or event.key == pygame.K_PAUSE:
+    if event.key == pygame.K_PAUSE:
       print("QUIT")
       break
     if event.key in event2ps2:
