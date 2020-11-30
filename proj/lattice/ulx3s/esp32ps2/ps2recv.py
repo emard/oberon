@@ -17,10 +17,16 @@ from uctypes import addressof
 import ps2
 
 ps2port=ps2.ps2(
+  # v3.0.x
   kbd_clk    = 26, # gp[11]
   kbd_data   = 25, # gn[11]
   mouse_clk  = 17, # wifi_gpio17
   mouse_data = 16, # wifi_gpio16
+  # v3.1.4
+  #kbd_clk    = 22, # wifi_gpio22
+  #kbd_data   = 21, # wifi_gpio21
+  #mouse_clk  = 27, # wifi_gpio27
+  #mouse_data = 26, # wifi_gpio26
   qbit_us=16,
   byte_us=150
 )
