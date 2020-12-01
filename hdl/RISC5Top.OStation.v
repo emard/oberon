@@ -71,6 +71,7 @@ reg rst;
 wire clk, clk_sdr;
 wire pclk;
 wire vga_hsync, vga_vsync;
+wire de;
 
 wire [3:0]btn = {BTN_EAST, BTN_NORTH, BTN_WEST, BTN_SOUTH};
 wire [7:0]swi = 8'b11111111;
