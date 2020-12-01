@@ -48,6 +48,8 @@ VERILOG_FILES = \
   ../../../../hdl/bram_true2p_2clk.v \
   ../../../../hdl/vqueue.v \
   ../../../../hdl/lattice/ecp5pll.sv \
+  ../../../../hdl/hex/osd.v \
+  ../../../../hdl/hex/hex_decoder.v \
 
 #  ../../../../hdl/bram32bit.v \ # works
 #  ../../../../hdl/lattice/bram32bit.v \ # works
